@@ -1,10 +1,10 @@
 #include "queue.h"
 #include <stdlib.h>
 
-static struct Node {
+struct Node {
   void *value;
   struct Node *next;
-} node;
+};
 
 struct Queue *newQueue(int capacity) {
   struct Queue *q;

@@ -12,13 +12,13 @@ void tracker_create() {
     for (uint8_t n_patt = 0; n_patt < PATTERNS_PER_INSTRUMENT; n_patt++) {
       struct pattern patt;
       for (uint8_t n_note = 0; n_note < NOTES_PER_PATTERN; n_note++) {
-	struct note no;
-	no.index = 30;
-	no.length = 32;
-	no.envelope_step = 7;
-	no.direction = 1;
-	no.volume = 15;
-	patt.notes[n_note] = no;
+        struct note no;
+        no.index = 36;
+        no.length = 32;
+        no.envelope_step = 7;
+        no.direction = 1;
+        no.volume = 15;
+        patt.notes[n_note] = no;
       }
       instr.patterns[n_patt] = patt;
     }

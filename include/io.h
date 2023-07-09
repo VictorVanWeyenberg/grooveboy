@@ -1,18 +1,21 @@
+#include <stdint.h>
+
 //* ---------- ADDRESSES ---------- */
 
 #define MEM_IO 0x04000000
-#define BG0CNT (*((volatile short int *)(MEM_IO + 0x8)))
-#define BG1CNT (*((volatile short int *)(MEM_IO + 0xA)))
-#define BG2CNT (*((volatile short int *)(MEM_IO + 0xC)))
-#define BG3CNT (*((volatile short int *)(MEM_IO + 0xE)))
+#define BG0CNT (*((uint16_t *)(MEM_IO + 0x8)))
+#define BG1CNT (*((uint16_t *)(MEM_IO + 0xA)))
+#define BG2CNT (*((uint16_t *)(MEM_IO + 0xC)))
+#define BG3CNT (*((uint16_t *)(MEM_IO + 0xE)))
 
-#define BG0HOFS (*((volatile unsigned char *)(MEM_IO + 0x10)))
-#define BG0VOFS (*((volatile unsigned char *)(MEM_IO + 0x12)))
+#define BG0HOFS (*((unsigned char *)(MEM_IO + 0x10)))
+#define BG0VOFS (*((unsigned char *)(MEM_IO + 0x12)))
 
-#define REG_DISPLAY (*((volatile unsigned int *)(MEM_IO)))
-#define REG_DISPLAY_VCOUNT (*((volatile unsigned int *)(MEM_IO + 0x0006)))
-#define REG_KEY_INPUT (*((volatile unsigned int *)(MEM_IO + 0x0130)))
-#define REG_KEY_CNT (*((volatile unsigned int *)(MEM_IO + 0x0132)))
+#define REG_DISPLAY (*((uint16_t *)(MEM_IO)))
+#define REG_DISPLAY_VCOUNT (*((uint16_t *)(MEM_IO + 0x0006)))
+#define REG_KEY_INPUT ((uint16_t *)(MEM_IO + 0x0130))
+
+#define REG_KEY_CNT (*((uint16_t *)(MEM_IO + 0x0132)))
 
 /* ---------- CONSTANTS ---------- */
 
@@ -56,3 +59,11 @@
 #define BGCNT_PRIORITY_3 3
 
 #define KEY_PRESSED_MASK ~REG_KEY_INPUT & 0x3ff
+
+/* ---------- METHODS ---------- */
+
+void init_io();
+void loop_end();
+void register_presses();
+uint16_t key_pressed(uint16_t key);
+uint16_t key_held(uint16_t key);
