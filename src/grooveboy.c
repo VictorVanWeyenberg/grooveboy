@@ -35,7 +35,7 @@ int main(void) {
   edit_screen_init();
   edit_screen_allocate();
   cursor_init();
-  bpm_to_start(3, 850); // Fur ze buttons jah.
+  bpm_to_start(3, 2500); // Fur ze buttons jah.
 
   tracker_create();
 
@@ -46,10 +46,15 @@ int main(void) {
     update_edit_screen_notes();
 
     // Prepare
-    // move_cursor();
+    if (key_held(KEY_A)) {
+      cursor_disable(1);
+    } else {
+      cursor_disable(0);
+    }
+    move_cursor();
 
     // Loop end
-    // loop_end();
+    loop_end();
   }
   return 0;
 }

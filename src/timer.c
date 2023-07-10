@@ -32,6 +32,7 @@ void bpm_to_start(uint8_t channel, uint16_t bpm) {
     }
 }
 
+uint8_t disable = 0;
 void timer_interrupt(uint8_t channel) {
     if (channel == 3) {
         register_presses();

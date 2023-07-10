@@ -19,16 +19,16 @@
 
 /* ---------- CONSTANTS ---------- */
 
-#define KEY_A 1
-#define KEY_B 2
-#define KEY_SELECT 4
-#define KEY_START 8
-#define KEY_RIGHT 16
-#define KEY_LEFT 32
-#define KEY_UP 64
-#define KEY_DOWN 128
-#define KEY_R 256
-#define KEY_L 512
+#define KEY_A 0
+#define KEY_B 1
+#define KEY_SELECT 2
+#define KEY_START 3
+#define KEY_RIGHT 4
+#define KEY_LEFT 5
+#define KEY_UP 6
+#define KEY_DOWN 7
+#define KEY_R 8
+#define KEY_L 9
 
 #define BG_MODE_0 0
 #define BG_MODE_1 1

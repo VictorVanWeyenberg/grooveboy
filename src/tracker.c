@@ -36,7 +36,7 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
   // Each instrument plays one pattern at a time.
   // The number of tracks, also the number of instruments.
   uint8_t *patterns = tracky->tracks[track].patterns;
-  uint8_t *indeces = malloc(sizeof(uint8_t) * NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN);
+  static uint8_t indeces[NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN];
   for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[patterns[inst]];
