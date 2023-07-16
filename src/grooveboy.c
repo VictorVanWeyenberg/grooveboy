@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "edit_screen.h"
 #include "timer.h"
+#include "screen_coordinator.h"
 
 int main(void) {
   REG_DISPLAY = BG_MODE_0 | SCREEN_DISPLAY_BG0 | SCREEN_DISPLAY_BG1 |
@@ -33,7 +34,7 @@ int main(void) {
   init_io();
 
   edit_screen_init();
-  edit_screen_allocate();
+  set_screen_type(EDIT_SCREEN);
   cursor_init();
   bpm_to_start(3, 2500); // Fur ze buttons jah.
 
@@ -46,12 +47,7 @@ int main(void) {
     update_edit_screen_notes();
 
     // Prepare
-    if (key_held(KEY_A)) {
-      cursor_disable(1);
-    } else {
-      cursor_disable(0);
-    }
-    move_cursor();
+    cursor_component_method();
 
     // Loop end
     loop_end();

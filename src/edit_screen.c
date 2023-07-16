@@ -2,12 +2,15 @@
 #include "tracker.h"
 #include "vram.h"
 #include "dma.h"
+#include "cursor.h"
 #include <stdlib.h>
 #include <string.h>
 
 extern short edit_screen_BG01_screen_data;
 extern short edit_screen_BG01_screen_data_length;
+extern component_callback edit_screen_component_callbacks;
 short *text;
+uint8_t edit_screen_page = 0;
 
 void edit_screen_init() {
   text = malloc(edit_screen_BG01_screen_data_length);

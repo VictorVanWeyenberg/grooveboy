@@ -22,6 +22,5 @@
 #define OBJ_CHARACTER_BLOCK ((short*)(MEM_VRAM + 0x10000))
 
 void vram_init();
-void edit_screen_allocate();
 
 #endif
