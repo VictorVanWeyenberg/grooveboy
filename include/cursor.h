@@ -28,6 +28,8 @@ extern struct obj_attrs *cursor_sw;
 void cursor_init();
 void move_cursor();
 void expand_cursor();
+void refresh_cursor_position();
+void set_cursor_position(uint8_t sx, uint8_t sy, uint8_t ex, uint8_t ey);
 void cursor_disable(uint8_t disable);
 void cursor_component_method();
 

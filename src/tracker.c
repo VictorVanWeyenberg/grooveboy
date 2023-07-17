@@ -60,6 +60,18 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
   return indeces;
 }
 
+uint8_t *tracker_selected_pattern_indeces() {
+  static uint8_t indeces[NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN];
+  for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
+    struct instrument instr = tracky->instruments[inst];
+    struct pattern p = instr.patterns[instr.selected_pattern];
+    for (uint8_t index = 0; index < NOTES_PER_PATTERN; index++) {
+      indeces[index*3 + inst] = p.notes[index].index;
+    }
+  }
+  return indeces;
+}
+
 uint8_t *tracker_track_pattern_lengths(uint8_t track) {
   uint8_t *patterns = tracky->tracks[track].patterns;
   uint8_t *lengths = malloc(sizeof(uint8_t) * NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN);
@@ -71,4 +83,14 @@ uint8_t *tracker_track_pattern_lengths(uint8_t track) {
     }
   }
   return lengths;
+}
+
+void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset) {
+  struct instrument instrument = tracky->instruments[instrument_number];
+  int8_t selected_pattern = instrument.selected_pattern;
+  int8_t soon_selected_pattern = selected_pattern + offset;
+  if (soon_selected_pattern < 0 || soon_selected_pattern >= PATTERNS_PER_INSTRUMENT) {
+    return;
+  }
+  tracky->instruments[instrument_number].selected_pattern = soon_selected_pattern;
 }

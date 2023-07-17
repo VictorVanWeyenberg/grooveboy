@@ -67,3 +67,5 @@ void loop_end();
 void register_presses();
 uint16_t key_pressed(uint16_t key);
 uint16_t key_held(uint16_t key);
+void lock_io();
+void unlock_io();

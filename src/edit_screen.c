@@ -45,9 +45,19 @@ char * index_to_note_notation(uint8_t index) {
   return notation;
 }
 
+char to_hex(uint8_t value) {
+  if (value >= 0 && value <= 9) {
+    return value + 16;
+  }
+  if (value >= 10 && value <= 15) {
+    return value + 23;
+  }
+  return ' ';
+}
+
 void update_edit_screen_notes() {
   memcpy(text, &edit_screen_BG01_screen_data, edit_screen_BG01_screen_data_length);
-  uint8_t *indexes = tracker_track_pattern_indeces(0);
+  uint8_t *indexes = tracker_selected_pattern_indeces();
   for (uint8_t y = 0; y < 16; y++) {
     for (uint8_t x = 0; x < 3; x++) {
       uint8_t index = indexes[y*3+x];
@@ -57,6 +67,7 @@ void update_edit_screen_notes() {
         uint8_t sy = y+3;
         text[sy*32+sx+i] = ((notation[i] - 32) & 0x3FF);
       }
+      text[38+x*4] = to_hex(tracky->instruments[x].selected_pattern);
     }
   }
   dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
