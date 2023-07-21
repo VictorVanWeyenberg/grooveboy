@@ -94,3 +94,16 @@ void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset) {
   }
   tracky->instruments[instrument_number].selected_pattern = soon_selected_pattern;
 }
+
+void tracker_copy_paste_notes(uint8_t instrument_src_index,
+                              uint8_t pattern_src_index,
+                              uint8_t note_src_index,
+                              uint8_t instrument_dst_index,
+                              uint8_t pattern_dst_index,
+                              uint8_t note_dst_index,
+                              uint8_t length) {
+  for (uint8_t index = 0; index < length; index++) {
+    tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index] =
+      tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index];
+  }
+}

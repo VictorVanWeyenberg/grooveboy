@@ -1,4 +1,5 @@
 #include "edit_screen.h"
+#include "edit_screen_callbacks.h"
 #include "tracker.h"
 #include "vram.h"
 #include "dma.h"
@@ -13,7 +14,7 @@ short *text;
 uint8_t edit_screen_page = 0;
 
 void edit_screen_init() {
-  text = malloc(edit_screen_BG01_screen_data_length);
+  text = calloc(edit_screen_BG01_screen_data_length, sizeof(uint8_t));
 }
 
 char * index_to_note_notation(uint8_t index) {
@@ -55,12 +56,13 @@ char to_hex(uint8_t value) {
   return ' ';
 }
 
+
 void update_edit_screen_notes() {
   memcpy(text, &edit_screen_BG01_screen_data, edit_screen_BG01_screen_data_length);
   uint8_t *indexes = tracker_selected_pattern_indeces();
   for (uint8_t y = 0; y < 16; y++) {
     for (uint8_t x = 0; x < 3; x++) {
-      uint8_t index = indexes[y*3+x];
+      uint8_t index = indexes[y*3+x+3*16*edit_screen_page];
       char *notation = index_to_note_notation(index);
       for (uint8_t i = 0; i < 3; i++) {
         uint8_t sx = (x*4)+4;
@@ -69,7 +71,10 @@ void update_edit_screen_notes() {
       }
       text[38+x*4] = to_hex(tracky->instruments[x].selected_pattern);
     }
+    text[(y+3)*32+1] = to_hex(edit_screen_page);
   }
   dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
   dma_on(1);
+  handle_page_flag = 1;
+  handle_clipboard_flag = 1;
 }

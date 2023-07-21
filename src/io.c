@@ -8,7 +8,7 @@ uint16_t *states;
 uint8_t locked = 0;
 
 void init_io() {
-    states = calloc(N_BUTTONS, sizeof(uint8_t));
+    states = calloc(N_BUTTONS, sizeof(uint16_t));
 }
 
 void register_presses() {
@@ -24,7 +24,7 @@ uint16_t key_pressed(uint16_t key) {
 }
 
 uint16_t key_held(uint16_t key) {
-    return states[key] >= 0xff;
+    return (states[key] & 0xff) == 0xff;
 }
 
 void loop_end() {

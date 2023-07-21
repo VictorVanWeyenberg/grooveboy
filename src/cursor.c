@@ -68,20 +68,21 @@ void move_cursor() {
         return;
     }
     handle_cursor_flag = 0;
-    while (kdq_size(component_queue) > 1) {
-        kdq_pop(uint8_t, component_queue);
-    }
-    uint8_t first = kdq_first(component_queue);
+    uint8_t first = kdq_last(component_queue);
     if (key_pressed(KEY_UP) && components[first].north != -1) {
+        while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].north);
     } else if (key_pressed(KEY_RIGHT) && components[first].east != -1) {
+        while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].east);
     } else if (key_pressed(KEY_DOWN) && components[first].south != -1) {
+        while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].south);
     } else if (key_pressed(KEY_LEFT) && components[first].west != -1) {
+        while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].west);
     } else {
@@ -91,6 +92,7 @@ void move_cursor() {
 }
 
 void refresh_cursor_position() {
+    while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
     struct component c = components[kdq_first(component_queue)];
     set_cursor_position(c.sx, c.sy, c.ex, c.ey);
 }
@@ -111,6 +113,10 @@ void cursor_disable(uint8_t disable) {
     cursor_ne->disable = disable & 1;
     cursor_se->disable = disable & 1;
     cursor_sw->disable = disable & 1;
+}
+
+uint8_t cursor_size() {
+    return kdq_size(component_queue);
 }
 
 void cursor_component_method() {

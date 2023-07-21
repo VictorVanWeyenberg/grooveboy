@@ -51,4 +51,12 @@ void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset);
 
 uint8_t *tracker_track_pattern_lengths(uint8_t track);
 
+void tracker_copy_paste_notes(uint8_t instrument_src_index,
+                              uint8_t pattern_src_index,
+                              uint8_t note_src_index,
+                              uint8_t instrument_dst_index,
+                              uint8_t pattern_dst_index,
+                              uint8_t note_dst_index,
+                              uint8_t length);
+
 #endif
