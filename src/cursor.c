@@ -69,19 +69,19 @@ void move_cursor() {
     }
     handle_cursor_flag = 0;
     uint8_t first = kdq_last(component_queue);
-    if (key_pressed(KEY_UP) && components[first].north != -1) {
+    if ((key_pressed(KEY_UP) || key_held(KEY_UP)) && components[first].north != -1) {
         while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].north);
-    } else if (key_pressed(KEY_RIGHT) && components[first].east != -1) {
+    } else if ((key_pressed(KEY_RIGHT) || key_held(KEY_RIGHT)) && components[first].east != -1) {
         while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].east);
-    } else if (key_pressed(KEY_DOWN) && components[first].south != -1) {
+    } else if ((key_pressed(KEY_DOWN) || key_held(KEY_DOWN)) && components[first].south != -1) {
         while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].south);
-    } else if (key_pressed(KEY_LEFT) && components[first].west != -1) {
+    } else if ((key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) && components[first].west != -1) {
         while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
         kdq_pop(uint8_t, component_queue);
         kdq_push(uint8_t, component_queue, components[first].west);

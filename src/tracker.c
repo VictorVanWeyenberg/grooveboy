@@ -3,14 +3,19 @@
 
 struct tracker *tracky;
 
+enum note_attribute {
+INDEX, LENGTH, ENVELOPE_STEP, VOLUME
+};
+
 void tracker_create() {
   free(tracky);
-  tracky = malloc(sizeof(struct tracker));
+  tracky = calloc(1, sizeof(struct tracker));
   for (uint8_t n_instr = 0; n_instr < NUMBER_OF_INSTRUMENTS; n_instr++) {
     struct instrument instr;
     instr.selected_pattern = 0;
     for (uint8_t n_patt = 0; n_patt < PATTERNS_PER_INSTRUMENT; n_patt++) {
       struct pattern patt;
+      patt.length = NOTES_PER_PATTERN - 1;
       for (uint8_t n_note = 0; n_note < NOTES_PER_PATTERN; n_note++) {
         struct note no;
         no.index = 36;
@@ -41,6 +46,43 @@ void tracker_change_note(uint8_t instrument, uint8_t pattern, uint8_t note_index
   tracky->instruments[instrument].patterns[pattern].notes[note_index].index = offsetted;
 }
 
+void tracker_change_length(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
+  uint8_t current = tracky->instruments[instrument].patterns[pattern].notes[note_index].length;
+  int8_t offsetted = current + offset;
+  if (offsetted < 0 || offsetted > 63) {
+    return;
+  }
+  tracky->instruments[instrument].patterns[pattern].notes[note_index].length = offsetted;
+}
+
+void tracker_change_envelope_duty(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
+  uint8_t current = tracky->instruments[instrument].patterns[pattern].notes[note_index].envelope_step;
+  int8_t offsetted = current + offset;
+  if (offsetted < 0 || offsetted > 7) {
+    return;
+  }
+  tracky->instruments[instrument].patterns[pattern].notes[note_index].envelope_step = offsetted;
+}
+
+void tracker_change_volume(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
+  uint8_t current = tracky->instruments[instrument].patterns[pattern].notes[note_index].volume;
+  int8_t offsetted = current + offset;
+  if (offsetted < 0 || offsetted > 15) {
+    return;
+  }
+  tracky->instruments[instrument].patterns[pattern].notes[note_index].volume = offsetted;
+}
+
+void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t offset) {
+  uint8_t selected_pattern = tracky->instruments[instrument_index].selected_pattern;
+  uint8_t current_length = tracky->instruments[instrument_index].patterns[selected_pattern].length;
+  int8_t offsetted = current_length + offset;
+  if (offsetted < 0 || offsetted > NOTES_PER_PATTERN - 1) {
+    return;
+  }
+  tracky->instruments[instrument_index].patterns[selected_pattern].length = offsetted;
+}
+
 uint8_t tracker_instrument_selected_pattern(uint8_t instrument) {
   return tracky->instruments[instrument].selected_pattern;
 }
@@ -60,16 +102,44 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
   return indeces;
 }
 
-uint8_t *tracker_selected_pattern_indeces() {
+uint8_t *tracker_selected_pattern_get(enum note_attribute attr) {
   static uint8_t indeces[NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN];
   for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[instr.selected_pattern];
     for (uint8_t index = 0; index < NOTES_PER_PATTERN; index++) {
-      indeces[index*3 + inst] = p.notes[index].index;
+      uint8_t attribute;
+      if (attr == INDEX) {
+        attribute = p.notes[index].index;
+      } else if (attr == LENGTH) {
+        attribute = p.notes[index].length;
+      } else if (attr == ENVELOPE_STEP) {
+        attribute = p.notes[index].envelope_step;
+      } else if (attr == VOLUME) {
+        attribute = p.notes[index].volume;
+      } else {
+        attribute = p.notes[index].index;
+      }
+      indeces[index*3 + inst] = attribute;
     }
   }
   return indeces;
+}
+
+uint8_t *tracker_selected_pattern_indeces() {
+  return tracker_selected_pattern_get(INDEX);
+}
+
+uint8_t *tracker_selected_pattern_lengths() {
+  return tracker_selected_pattern_get(LENGTH);
+}
+
+uint8_t *tracker_selected_pattern_envelope_steps() {
+  return tracker_selected_pattern_get(ENVELOPE_STEP);
+}
+
+uint8_t *tracker_selected_pattern_volumes() {
+  return tracker_selected_pattern_get(VOLUME);
 }
 
 uint8_t *tracker_track_pattern_lengths(uint8_t track) {

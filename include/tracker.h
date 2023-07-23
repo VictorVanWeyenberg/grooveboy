@@ -18,6 +18,7 @@ struct note {
 } __attribute__((packed));
 
 struct pattern {
+  uint8_t length; // Read: Last step
   struct note notes[NOTES_PER_PATTERN];
 };
 
@@ -40,12 +41,19 @@ extern struct tracker *tracky;
 void tracker_create();
 
 void tracker_change_note(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
+void tracker_change_length(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
+void tracker_change_envelope_duty(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
+void tracker_change_volume(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
 
 uint8_t tracker_instrument_selected_pattern(uint8_t instrument);
 
 uint8_t *tracker_track_pattern_indeces(uint8_t track);
 
 uint8_t *tracker_selected_pattern_indeces();
+uint8_t *tracker_selected_pattern_lengths();
+uint8_t *tracker_selected_pattern_envelope_steps();
+uint8_t *tracker_selected_pattern_volumes();
+void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t offset);
 
 void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset);
 
