@@ -3,10 +3,6 @@
 
 struct tracker *tracky;
 
-enum note_attribute {
-INDEX, LENGTH, ENVELOPE_STEP, VOLUME
-};
-
 void tracker_create() {
   free(tracky);
   tracky = calloc(1, sizeof(struct tracker));
@@ -175,5 +171,36 @@ void tracker_copy_paste_notes(uint8_t instrument_src_index,
   for (uint8_t index = 0; index < length; index++) {
     tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index] =
       tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index];
+  }
+}
+
+void tracker_copy_paste_notes_attribute(uint8_t instrument_src_index,
+                              uint8_t pattern_src_index,
+                              uint8_t note_src_index,
+                              uint8_t instrument_dst_index,
+                              uint8_t pattern_dst_index,
+                              uint8_t note_dst_index,
+                              uint8_t length,
+                              enum note_attribute attribute) {
+  if (attribute == INDEX) {
+    for (uint8_t index = 0; index < length; index++) {
+      tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index].index =
+        tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index].index;
+    }
+  } else if (attribute == LENGTH) {
+    for (uint8_t index = 0; index < length; index++) {
+      tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index].length =
+        tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index].length;
+    }
+  } else if (attribute == ENVELOPE_STEP) {
+    for (uint8_t index = 0; index < length; index++) {
+      tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index].envelope_step =
+        tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index].envelope_step;
+    }
+  } else if (attribute == VOLUME) {
+    for (uint8_t index = 0; index < length; index++) {
+      tracky->instruments[instrument_dst_index].patterns[pattern_dst_index].notes[note_dst_index + index].volume =
+        tracky->instruments[instrument_src_index].patterns[pattern_src_index].notes[note_src_index + index].volume;
+    }
   }
 }

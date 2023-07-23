@@ -8,6 +8,10 @@
 #define PATTERNS_PER_INSTRUMENT 16
 #define NOTES_PER_PATTERN 128
 
+enum note_attribute {
+INDEX, LENGTH, ENVELOPE_STEP, VOLUME
+};
+
 struct note {
   uint8_t index;
   uint16_t length: 6,
@@ -66,5 +70,13 @@ void tracker_copy_paste_notes(uint8_t instrument_src_index,
                               uint8_t pattern_dst_index,
                               uint8_t note_dst_index,
                               uint8_t length);
+void tracker_copy_paste_notes_attribute(uint8_t instrument_src_index,
+                              uint8_t pattern_src_index,
+                              uint8_t note_src_index,
+                              uint8_t instrument_dst_index,
+                              uint8_t pattern_dst_index,
+                              uint8_t note_dst_index,
+                              uint8_t length,
+                              enum note_attribute attribute);
 
 #endif

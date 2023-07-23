@@ -116,6 +116,11 @@ void update_edit_screen_notes() {
       text[(6+iter)*32+26+iter2] = notation[iter2];
     }
   }
+  if (paste_mode == NOTES) {
+    text[32+28] = ' ' - 32;
+  } else {
+    text[32+28] = '@' - 32;
+  }
   dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
   dma_on(1);
   handle_page_flag = 1;

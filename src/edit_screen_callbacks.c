@@ -17,10 +17,11 @@ component_callback *edit_screen_component_callbacks[8] = {
 };
 uint8_t handle_page_flag = 1;
 uint8_t handle_clipboard_flag = 1;
-uint8_t clipboard_src_instrument = -1;
-uint8_t clipboard_src_pattern = -1;
-uint8_t clipboard_src_index = -1;
+uint8_t clipboard_src_instrument = 0;
+uint8_t clipboard_src_pattern = 0;
+uint8_t clipboard_src_index = 0;
 uint8_t clipboard_length = 0;
+enum clipboard_mode paste_mode = NOTES;
 
 void edit_screen_null_function(uint8_t *args, uint8_t args_len) {
     move_cursor();
@@ -37,6 +38,14 @@ void change_page() {
     } else if (key_pressed(KEY_UP) && edit_screen_page > 0) {
         refresh_cursor_position();
         edit_screen_page--;
+    }
+}
+
+void toggle_clipboard_mode() {
+    if (paste_mode == NOTES) {
+        paste_mode = ATTRIBUTES;
+    } else {
+        paste_mode = NOTES;
     }
 }
 
@@ -117,10 +126,29 @@ void edit_note(uint8_t *args, uint8_t args_len) {
             clipboard_src_index = note_index;
         }
     } else if (key_held(KEY_L)) {
-        if (key_pressed(KEY_A))  {
-            uint8_t pattern = tracky->instruments[instrument].selected_pattern;
-            tracker_copy_paste_notes(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
-                                     instrument, pattern, note_index, clipboard_length);
+        if (key_pressed(KEY_A)) {
+            if (paste_mode == NOTES) {
+                uint8_t pattern = tracky->instruments[instrument].selected_pattern;
+                tracker_copy_paste_notes(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
+                                        instrument, pattern, note_index, clipboard_length);
+            } else if (paste_mode == ATTRIBUTES) {
+                uint8_t pattern = tracky->instruments[instrument].selected_pattern;
+                enum note_attribute attribute = INDEX;
+                if (mode == NOTE) {
+                    attribute = INDEX;
+                } else if (mode == HOLD) {
+                    attribute = LENGTH;
+                } else if (mode == DECAY) {
+                    attribute = ENVELOPE_STEP;
+                } else if (mode == AMPLITUDE) {
+                    attribute = VOLUME;
+                }
+                tracker_copy_paste_notes_attribute(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
+                                        instrument, pattern, note_index, clipboard_length, attribute);
+            }
+        }
+        if (key_pressed(KEY_B)) {
+            toggle_clipboard_mode();
         }
     } else {
         move_cursor();
@@ -208,3 +236,4 @@ void set_instrument_pattern_length(uint8_t *args, uint8_t args_len) {
     }
     move_cursor();
 }
+
