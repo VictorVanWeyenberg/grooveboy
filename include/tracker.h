@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define NUMBER_OF_INSTRUMENTS 3
+#define NUMBER_OF_INSTRUMENTS 4
 #define NUMBER_OF_TRACKS 16
 #define PATTERNS_PER_INSTRUMENT 16
 #define NOTES_PER_PATTERN 128

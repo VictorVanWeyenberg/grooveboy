@@ -88,8 +88,8 @@ void update_edit_screen_notes() {
     indexes = tracker_selected_pattern_indeces();
   }
   for (uint8_t y = 0; y < 16; y++) {
-    for (uint8_t x = 0; x < 3; x++) {
-      uint8_t index = indexes[y*3+x+3*16*edit_screen_page];
+    for (uint8_t x = 0; x < NUMBER_OF_INSTRUMENTS; x++) {
+      uint8_t index = indexes[NUMBER_OF_INSTRUMENTS*(y+16*edit_screen_page)+x];
       char *notation;
       if (mode == NOTE) {
         notation = index_to_note_notation(index);

@@ -92,7 +92,7 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[patterns[inst]];
     for (uint8_t index = 0; index < NOTES_PER_PATTERN; index++) {
-      indeces[index * 3 + inst] = p.notes[index].index;
+      indeces[index * NUMBER_OF_INSTRUMENTS + inst] = p.notes[index].index;
     }
   }
   return indeces;
@@ -116,7 +116,7 @@ uint8_t *tracker_selected_pattern_get(enum note_attribute attr) {
       } else {
         attribute = p.notes[index].index;
       }
-      indeces[index*3 + inst] = attribute;
+      indeces[index*NUMBER_OF_INSTRUMENTS + inst] = attribute;
     }
   }
   return indeces;
@@ -145,7 +145,7 @@ uint8_t *tracker_track_pattern_lengths(uint8_t track) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[patterns[inst]];
     for (uint8_t index = 0; index < NOTES_PER_PATTERN; index++) {
-      lengths[index * 3 + inst] = p.notes[index].length;
+      lengths[index * NUMBER_OF_INSTRUMENTS + inst] = p.notes[index].length;
     }
   }
   return lengths;
