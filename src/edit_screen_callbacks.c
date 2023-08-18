@@ -5,7 +5,7 @@
 #include "cursor.h"
 #include "tracker.h"
 
-component_callback *edit_screen_component_callbacks[8] = {
+component_callback *volatile const edit_screen_component_callbacks[8] = {
     edit_screen_null_function,
     edit_note,
     change_selected_pattern,
@@ -15,12 +15,12 @@ component_callback *edit_screen_component_callbacks[8] = {
     amplitude_edit_mode,
     set_instrument_pattern_length
 };
-uint8_t handle_page_flag = 1;
-uint8_t handle_clipboard_flag = 1;
-uint8_t clipboard_src_instrument = 0;
-uint8_t clipboard_src_pattern = 0;
-uint8_t clipboard_src_index = 0;
-uint8_t clipboard_length = 0;
+volatile uint8_t handle_page_flag = 1;
+volatile uint8_t handle_clipboard_flag = 1;
+volatile uint8_t clipboard_src_instrument = 0;
+volatile uint8_t clipboard_src_pattern = 0;
+volatile uint8_t clipboard_src_index = 0;
+volatile uint8_t clipboard_length = 0;
 enum clipboard_mode paste_mode = NOTES;
 
 void edit_screen_null_function(uint8_t *args, uint8_t args_len) {
@@ -117,7 +117,7 @@ void edit_note(uint8_t *args, uint8_t args_len) {
         if (handle_clipboard_flag == 1) {
             handle_clipboard_flag = 0;
             clipboard_src_instrument = instrument;
-            clipboard_src_pattern = tracky->instruments[clipboard_src_instrument].selected_pattern;
+            clipboard_src_pattern = tracker_instrument_selected_pattern(clipboard_src_instrument);
             clipboard_src_index = note_index;
             clipboard_length = cursor_size();
         }
@@ -128,11 +128,11 @@ void edit_note(uint8_t *args, uint8_t args_len) {
     } else if (key_held(KEY_L)) {
         if (key_pressed(KEY_A)) {
             if (paste_mode == NOTES) {
-                uint8_t pattern = tracky->instruments[instrument].selected_pattern;
+                uint8_t pattern = tracker_instrument_selected_pattern(instrument);
                 tracker_copy_paste_notes(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
                                         instrument, pattern, note_index, clipboard_length);
             } else if (paste_mode == ATTRIBUTES) {
-                uint8_t pattern = tracky->instruments[instrument].selected_pattern;
+                uint8_t pattern = tracker_instrument_selected_pattern(instrument);
                 enum note_attribute attribute = INDEX;
                 if (mode == NOTE) {
                     attribute = INDEX;

@@ -17,7 +17,7 @@ struct dma_entry {
   uint32_t cnt;
 };
 
-#define DMA ((volatile DMA_CONTROLLER *)0x040000B0)
+#define DMA ((DMA_CONTROLLER *)0x040000B0)
 
 #define DMA_DST_INC (0 << 21)
 #define DMA_DST_DEC (1 << 21)

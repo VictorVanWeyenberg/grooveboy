@@ -3,19 +3,15 @@
 //* ---------- ADDRESSES ---------- */
 
 #define MEM_IO 0x04000000
-#define BG0CNT (*((uint16_t *)(MEM_IO + 0x8)))
-#define BG1CNT (*((uint16_t *)(MEM_IO + 0xA)))
-#define BG2CNT (*((uint16_t *)(MEM_IO + 0xC)))
-#define BG3CNT (*((uint16_t *)(MEM_IO + 0xE)))
+#define BG0CNT (*((volatile uint16_t *)(MEM_IO + 0x8)))
+#define BG1CNT (*((volatile uint16_t *)(MEM_IO + 0xA)))
+#define BG2CNT (*((volatile uint16_t *)(MEM_IO + 0xC)))
+#define BG3CNT (*((volatile uint16_t *)(MEM_IO + 0xE)))
 
-#define BG0HOFS (*((unsigned char *)(MEM_IO + 0x10)))
-#define BG0VOFS (*((unsigned char *)(MEM_IO + 0x12)))
+#define REG_DISPLAY   (*((volatile uint16_t *)(MEM_IO)))
 
-#define REG_DISPLAY (*((uint16_t *)(MEM_IO)))
-#define REG_DISPLAY_VCOUNT (*((uint16_t *)(MEM_IO + 0x0006)))
-#define REG_KEY_INPUT ((uint16_t *)(MEM_IO + 0x0130))
-
-#define REG_KEY_CNT (*((uint16_t *)(MEM_IO + 0x0132)))
+#define REG_KEY_INPUT (*(volatile uint16_t *)(MEM_IO + 0x0130))
+#define REG_KEY_CNT   (*(volatile uint16_t *)(MEM_IO + 0x0132))
 
 /* ---------- CONSTANTS ---------- */
 
@@ -67,5 +63,5 @@ void loop_end();
 void register_presses();
 uint16_t key_pressed(uint16_t key);
 uint16_t key_held(uint16_t key);
-void lock_io();
-void unlock_io();
+
+#define KEY_DOWN_NOW(key)  (~(REG_KEY_INPUT) & key)

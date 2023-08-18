@@ -9,13 +9,13 @@ KDQ_INIT(uint8_t)
 #define min(a,b) a > b ? b : a
 #define max(a,b) a > b ? a : b
 
-struct obj_attrs *cursor_nw;
-struct obj_attrs *cursor_ne;
-struct obj_attrs *cursor_se;
-struct obj_attrs *cursor_sw;
+volatile struct obj_attrs *cursor_nw;
+volatile struct obj_attrs *cursor_ne;
+volatile struct obj_attrs *cursor_se;
+volatile struct obj_attrs *cursor_sw;
 
-kdq_t(uint8_t) *component_queue;
-uint8_t handle_cursor_flag = 1;
+kdq_t(uint8_t) *volatile component_queue;
+volatile uint8_t handle_cursor_flag = 1;
 
 void cursor_init() {
     component_queue = kdq_init(uint8_t);
@@ -120,7 +120,6 @@ uint8_t cursor_size() {
 }
 
 void cursor_component_method() {
-    lock_io();
     for (uint8_t iter = 0; iter < kdq_size(component_queue); iter++) {
         uint8_t index = kdq_at(component_queue, iter);
         uint8_t callback_index = components[index].callback_index;
@@ -133,5 +132,4 @@ void cursor_component_method() {
         callbacks[callback_index](component_args, args_len);
     }
     handle_cursor_flag = 1;
-    unlock_io();
 }

@@ -8,12 +8,12 @@ struct Queue {
   struct Node *tail;
 };
 
-extern struct Queue *newQueue(int capacity);
+struct Queue *newQueue(int capacity);
 
-extern int enqueue(struct Queue *q, void *value);
+int enqueue(struct Queue *q, void *value);
 
-extern void *dequeue(struct Queue *q);
+void *dequeue(struct Queue *q);
 
-extern void freeQueue(struct Queue *q);
+void freeQueue(struct Queue *q);
 
 #endif

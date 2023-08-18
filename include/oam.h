@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 struct obj_attrs {
-    volatile uint16_t
+    uint16_t
     y: 8,
         rotation_scaling: 1,
         disable: 1,
@@ -12,13 +12,13 @@ struct obj_attrs {
         mosaic: 1,
         palettes: 1,
         shape: 2;
-    volatile uint16_t
+    uint16_t
     x: 9,
         not_used: 3,
         hflip: 1,
         vflip: 1,
         size: 2;
-    volatile uint16_t
+    uint16_t
     tile_number: 10,
         priority: 2,
         palette_number: 4;

@@ -10,7 +10,7 @@
 extern short edit_screen_BG01_screen_data;
 extern short edit_screen_BG01_screen_data_length;
 extern component_callback edit_screen_component_callbacks;
-short *text;
+uint16_t *text;
 uint8_t edit_screen_page = 0;
 enum edit_mode mode;
 
@@ -107,10 +107,10 @@ void update_edit_screen_notes() {
     text[(y+3)*32+1] = to_hex(edit_screen_page);
   }
   for (uint8_t iter = 0; iter < NUMBER_OF_INSTRUMENTS; iter++) {
-    text[38+iter*4] = to_hex(tracky->instruments[iter].selected_pattern);
-    text[(6+iter)*32+22] = to_hex(tracky->instruments[iter].selected_pattern);
-    uint8_t selected_pattern = tracky->instruments[iter].selected_pattern;
-    uint8_t selected_pattern_length = tracky->instruments[iter].patterns[selected_pattern].length;
+    uint8_t selected_pattern = tracker_instrument_selected_pattern(iter);
+    text[38+iter*4] = to_hex(selected_pattern);
+    text[(6+iter)*32+22] = to_hex(selected_pattern);
+    uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(iter);
     char *notation = to_long_hex(selected_pattern_length);
     for (uint8_t iter2 = 0; iter2 < 3; iter2++) {
       text[(6+iter)*32+26+iter2] = notation[iter2];

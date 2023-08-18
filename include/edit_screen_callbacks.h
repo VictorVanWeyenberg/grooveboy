@@ -7,8 +7,8 @@ enum clipboard_mode {
 NOTES,ATTRIBUTES
 };
 
-extern uint8_t handle_page_flag;
-extern uint8_t handle_clipboard_flag;
+volatile extern uint8_t handle_page_flag;
+volatile extern uint8_t handle_clipboard_flag;
 extern enum clipboard_mode paste_mode;
 
 void edit_screen_null_function(uint8_t *args, uint8_t args_len);

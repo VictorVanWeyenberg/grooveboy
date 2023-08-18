@@ -2,15 +2,16 @@
 #include "math.h"
 #include "io.h"
 #include "cursor.h"
+#include "snd.h"
 
-uint32_t CLK_FREQ = 16777216;
-double scalers[4] = { 1.0, 64.0, 256.0, 1024.0 };
+const uint32_t CLK_FREQ = 16777216;
+const double scalers[4] = { 1.0, 64.0, 256.0, 1024.0 };
 
 void timer_start(uint8_t channel, int16_t start, uint8_t prescaler) {
     if (channel < 0 || channel > 3) {
         return;
     }
-    TMxCNT[channel].enable = 0;
+    // TMxCNT[channel].enable = 0;
     TMxCNT[channel].start = -start;
     TMxCNT[channel].count_up = 0;
     TMxCNT[channel].prescaler = prescaler;
@@ -32,9 +33,8 @@ void bpm_to_start(uint8_t channel, uint16_t bpm) {
     }
 }
 
-uint8_t disable = 0;
 void timer_interrupt(uint8_t channel) {
     if (channel == 3) {
-        register_presses();
+        trigger_sound();
     }
 }

@@ -20,11 +20,6 @@ struct component {
     uint8_t args_len;
 };
 
-extern struct obj_attrs *cursor_nw;
-extern struct obj_attrs *cursor_ne;
-extern struct obj_attrs *cursor_se;
-extern struct obj_attrs *cursor_sw;
-
 void cursor_init();
 void move_cursor();
 void expand_cursor();

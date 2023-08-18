@@ -3,17 +3,16 @@
 #include "string.h"
 #include "tracker.h"
 
-uint8_t N_BUTTONS = 10;
-uint16_t *states;
-uint8_t locked = 0;
+volatile const uint8_t N_BUTTONS = 10;
+volatile uint8_t *states;
 
 void init_io() {
-    states = calloc(N_BUTTONS, sizeof(uint16_t));
+    states = calloc(N_BUTTONS, sizeof(uint8_t));
 }
 
 void register_presses() {
-    if (locked == 1) return;
-    uint16_t state = ~*REG_KEY_INPUT;
+    uint16_t state = REG_KEY_INPUT & 0x3FF;
+    state = ~state;
     for (uint8_t key = 0; key < N_BUTTONS; key++) {
         states[key] = (states[key] << 1) | ((state & (1 << key)) >> key);
     }
@@ -24,11 +23,10 @@ uint16_t key_pressed(uint16_t key) {
 }
 
 uint16_t key_held(uint16_t key) {
-    return (states[key] & 0xff) == 0xff;
+    return (states[key] & 0x01) > 0 && (states[key] & 0xF) == 0xF;
 }
 
 void loop_end() {
-    if (locked == 1) return;
     for (uint8_t key = 0; key < N_BUTTONS; key++) {
         if (key_pressed(key)) {
             states[key] = 0x00;
@@ -36,10 +34,3 @@ void loop_end() {
     }
 }
 
-void lock_io() {
-    locked = 1;
-}
-
-void unlock_io() {
-    locked = 0;
-}
