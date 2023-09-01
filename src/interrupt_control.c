@@ -15,8 +15,8 @@ void interrupt_handler(void) {
     dma_interrupt(1);
   }
   if (REG_IF & INT_TIMER3) {
-    timer_interrupt(3);
     REG_IF |= INT_TIMER3;
+    timer_interrupt(3);
   }
 }
 

@@ -11,10 +11,10 @@ AS         := $(DEVKITARM)$(PREFIX)as
 BIN2C      := tools/bin2c
 GBAFIX     := $(DEVKITPRO)/tools/bin/gbafix
 
-MODEL      := -mthumb-interwork -marm # -mlong-calls #This makes interrupts work
+MODEL      := -mthumb -mthumb-interwork -marm # -mlong-calls #This makes interrupts work
 SPECS      := -specs=gba.specs
-CFLAGS     := $(MODEL) -I include -Wall -pedantic -std=c99 -O3
-LDFLAGS    := $(SPECS) $(MODEL) -lm
+CFLAGS     := $(MODEL) -I include -Wall -pedantic -std=c99 -O3 -mcpu=arm7tdmi -mtune=arm7tdmi -mfloat-abi=soft -ffast-math
+LDFLAGS    := $(SPECS) $(MODEL) -lm --verbose
 
 BUILD_DIR  := build
 

@@ -11,7 +11,7 @@ void tracker_create() {
     instr.selected_pattern = 0;
     for (uint8_t n_patt = 0; n_patt < PATTERNS_PER_INSTRUMENT; n_patt++) {
       struct pattern patt;
-      patt.length = 15;
+      patt.length = 16;
       for (uint8_t n_note = 0; n_note < NOTES_PER_PATTERN; n_note++) {
         struct note no;
         no.index = 36;
@@ -139,19 +139,6 @@ void tracker_selected_pattern_envelope_steps(uint8_t *indeces) {
 
 void tracker_selected_pattern_volumes(uint8_t *indeces) {
   tracker_selected_pattern_get(VOLUME, indeces);
-}
-
-uint8_t *tracker_track_pattern_lengths(uint8_t track) {
-  volatile uint8_t *patterns = tracky->tracks[track].patterns;
-  uint8_t *lengths = calloc(NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN, sizeof(uint8_t));
-  for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
-    struct instrument instr = tracky->instruments[inst];
-    struct pattern p = instr.patterns[patterns[inst]];
-    for (uint8_t index = 0; index < NOTES_PER_PATTERN; index++) {
-      lengths[index * NUMBER_OF_INSTRUMENTS + inst] = p.notes[index].length;
-    }
-  }
-  return lengths;
 }
 
 void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset) {
