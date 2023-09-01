@@ -4,6 +4,7 @@
 #include "io.h"
 #include "cursor.h"
 #include "tracker.h"
+#include "screen_coordinator.h"
 
 component_callback *volatile const edit_screen_component_callbacks[8] = {
     edit_screen_null_function,
@@ -35,9 +36,11 @@ void change_page() {
     if (key_pressed(KEY_DOWN) && edit_screen_page < (NOTES_PER_PATTERN / 16) - 1) {
         refresh_cursor_position();
         edit_screen_page++;
-    } else if (key_pressed(KEY_UP) && edit_screen_page > 0) {
+            update_screen_lock();
+        } else if (key_pressed(KEY_UP) && edit_screen_page > 0) {
         refresh_cursor_position();
         edit_screen_page--;
+        update_screen_lock();
     }
 }
 
@@ -47,6 +50,7 @@ void toggle_clipboard_mode() {
     } else {
         paste_mode = NOTES;
     }
+    update_screen_lock();
 }
 
 void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note_index) {
@@ -60,6 +64,7 @@ void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note
         } else if (mode == AMPLITUDE) {
             tracker_change_volume(instrument, pattern, note_index, 1);
         }
+        update_screen_lock();
     }
     if (key_pressed(KEY_DOWN)) {
         if (mode == NOTE) {
@@ -71,6 +76,7 @@ void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note
         } else if (mode == AMPLITUDE) {
             tracker_change_volume(instrument, pattern, note_index, -1);
         }
+        update_screen_lock();
     }
     if (key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) {
         if (mode == NOTE) {
@@ -82,6 +88,7 @@ void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note
         } else if (mode == AMPLITUDE) {
             tracker_change_volume(instrument, pattern, note_index, -1);
         }
+        update_screen_lock();
     }
     if (key_pressed(KEY_RIGHT) || key_held(KEY_RIGHT)) {
         if (mode == NOTE) {
@@ -93,6 +100,7 @@ void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note
         } else if (mode == AMPLITUDE) {
             tracker_change_volume(instrument, pattern, note_index, 1);
         }
+        update_screen_lock();
     }
 }
 
@@ -164,9 +172,11 @@ void change_selected_pattern(uint8_t *args, uint8_t args_len) {
         // select_cursor();
         if (key_pressed(KEY_UP) || key_pressed(KEY_RIGHT)) {
             tracker_change_selected_pattern(instrument_number, 1);
+            update_screen_lock();
         }
         if (key_pressed(KEY_LEFT) || key_pressed(KEY_DOWN)) {
             tracker_change_selected_pattern(instrument_number, -1);
+            update_screen_lock();
         }
         return;
     }
@@ -180,6 +190,7 @@ void note_edit_mode(uint8_t *args, uint8_t args_len) {
     }
     if (key_pressed(KEY_A)) {
         set_edit_mode(NOTE);
+        update_screen_lock();
     }
     move_cursor();
 }
@@ -190,6 +201,7 @@ void hold_edit_mode(uint8_t *args, uint8_t args_len) {
     }
     if (key_pressed(KEY_A)) {
         set_edit_mode(HOLD);
+        update_screen_lock();
     }
     move_cursor();
 }
@@ -200,6 +212,7 @@ void decay_edit_mode(uint8_t *args, uint8_t args_len) {
     }
     if (key_pressed(KEY_A)) {
         set_edit_mode(DECAY);
+        update_screen_lock();
     }
     move_cursor();
 }
@@ -210,6 +223,7 @@ void amplitude_edit_mode(uint8_t *args, uint8_t args_len) {
     }
     if (key_pressed(KEY_A)) {
         set_edit_mode(AMPLITUDE);
+        update_screen_lock();
     }
     move_cursor();
 }
@@ -232,6 +246,7 @@ void set_instrument_pattern_length(uint8_t *args, uint8_t args_len) {
         if (key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) {
             tracker_change_selected_pattern_length(instrument_index, -1);
         }
+        update_screen_lock();
         return;
     }
     move_cursor();

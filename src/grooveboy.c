@@ -13,7 +13,6 @@
 #include "timer.h"
 #include "screen_coordinator.h"
 #include "snd.h"
-#include "bios.h"
 
 int main(void) {
   REG_DISPLAY = BG_MODE_0 | SCREEN_DISPLAY_BG0 | SCREEN_DISPLAY_BG1 |
@@ -25,7 +24,7 @@ int main(void) {
 
   REG_IME = 0x00;
   REG_INTERRUPT = &interrupt_handler;
-  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_VBLANK;
+  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3;
   REG_IME = 0x01;
 
   REG_SOUNDCNT_X = 0x0080;
@@ -35,25 +34,29 @@ int main(void) {
 
   tracker_create();
 
+  while(REG_VCOUNT >= 160);   // wait till VDraw
+  while(REG_VCOUNT < 160);    // wait till VBlank
   dma_init();
   pal_init();
   vram_init();
   init_io();
 
-  edit_screen_init();
   set_screen_type(EDIT_SCREEN);
   cursor_init();
 
-  bpm_to_start(3, 120); // Sound
+  // bpm_to_start(3, 120); // Sound
+  update_screen_lock();
+  update_screen();
 
-  // Dear Vicky from the future. Why are buttons not working?
-  // You solved the issue of the invalid memory jumps by adding appropriate volatiles.
   while (1) {
     // Wait for VSYNC
-    VBlankIntrWait();
+    while(REG_VCOUNT >= 160);   // wait till VDraw
+    while(REG_VCOUNT < 160);    // wait till VBlank
 
-    // Draw
-    update_edit_screen_notes();
+    update_screen();
+
+    // Draw Screen
+    dma_cycle();
 
     // Prepare
     register_presses();

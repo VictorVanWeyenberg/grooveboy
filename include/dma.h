@@ -1,4 +1,3 @@
-#include "queue.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -27,16 +26,17 @@ struct dma_entry {
 #define DMA_SRC_DEC (1 << 23)
 #define DMA_SRC_FIX (2 << 23)
 
+#define TRANSFER_16 (1 << 28)
 #define DMA_INT (1 << 30)
 #define DMA_ON (1 << 31)
 
 void dma_init();
 
-void dma_on(uint8_t dma_channel);
-
 void dma_interrupt(uint8_t dma_channel);
 
-int dma_push(uint8_t dma_channel, void *src_address, uint16_t size, 
+int dma_push(uint8_t dma_channel, void *src_address, uint16_t size,
              void *dst_address);
+
+void dma_cycle();
 
 #endif

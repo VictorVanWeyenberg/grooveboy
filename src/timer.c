@@ -11,7 +11,7 @@ void timer_start(uint8_t channel, int16_t start, uint8_t prescaler) {
     if (channel < 0 || channel > 3) {
         return;
     }
-    // TMxCNT[channel].enable = 0;
+    TMxCNT[channel].enable = 0;
     TMxCNT[channel].start = -start;
     TMxCNT[channel].count_up = 0;
     TMxCNT[channel].prescaler = prescaler;

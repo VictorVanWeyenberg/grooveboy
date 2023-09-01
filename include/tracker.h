@@ -53,10 +53,10 @@ uint8_t tracker_instrument_selected_pattern(uint8_t instrument);
 uint8_t tracker_instrument_selected_pattern_length(uint8_t instrument);
 
 uint8_t  tracker_selected_pattern(uint8_t instrument);
-uint8_t *tracker_selected_pattern_indeces();
-uint8_t *tracker_selected_pattern_lengths();
-uint8_t *tracker_selected_pattern_envelope_steps();
-uint8_t *tracker_selected_pattern_volumes();
+void tracker_selected_pattern_indeces(uint8_t *indeces);
+void tracker_selected_pattern_lengths(uint8_t *indeces);
+void tracker_selected_pattern_envelope_steps(uint8_t *indeces);
+void tracker_selected_pattern_volumes(uint8_t *indeces);
 void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t offset);
 
 void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset);
@@ -79,6 +79,6 @@ void tracker_copy_paste_notes_attribute(uint8_t instrument_src_index,
                               uint8_t length,
                               enum note_attribute attribute);
 
-volatile struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step);
+struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step);
 
 #endif

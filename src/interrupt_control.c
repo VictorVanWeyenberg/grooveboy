@@ -18,9 +18,6 @@ void interrupt_handler(void) {
     timer_interrupt(3);
     REG_IF |= INT_TIMER3;
   }
-  if (REG_IF & INT_VBLANK) {
-    REG_IF |= INT_VBLANK;
-  }
 }
 
 #endif

@@ -18,10 +18,10 @@ uint16_t midi_key_to_sample_rate(uint8_t key) {
 void trigger_sound() {
     step %= NOTES_PER_PATTERN;
 
-    volatile struct note *note0 = get_note_of_instrument(0, step);
+    struct note *note0 = get_note_of_instrument(0, step);
     REG_SOUND1CNT_L = 0;
     REG_SOUND1CNT_H = (note0->length & 0x1F) | 0x80 | ((note0->envelope_step & 0x7) << 8) | ((note0->volume & 0xF) << 12);
-    REG_SOUND1CNT_X = midi_key_to_rate(note0->index);
+    REG_SOUND1CNT_X = 0x8000 | midi_key_to_rate(note0->index);
 
     /* REG_SOUND2CNT_L = notes[1]->length |
         0x80 |
@@ -45,11 +45,11 @@ void trigger_sound() {
         SOUND4STEPS15 |
         SOUND4PLAYONCE; */
 
-    REG_SOUND1CNT_X |= 0x8000;
+    // REG_SOUND1CNT_X |= 0x8000;
     // REG_SOUND2CNT_H |= 0x8000;
     // REG_SOUND3CNT_X |= 0X8000;
     // REG_SOUND4CNT_H |= 0X8000;
 
-    // step++;
-    // if (step > 128) step = 0;
+    step++;
+    if (step > 128) step = 0;
 }

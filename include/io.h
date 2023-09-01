@@ -9,6 +9,7 @@
 #define BG3CNT (*((volatile uint16_t *)(MEM_IO + 0xE)))
 
 #define REG_DISPLAY   (*((volatile uint16_t *)(MEM_IO)))
+#define REG_VCOUNT    (*(volatile uint16_t *)0x04000006)
 
 #define REG_KEY_INPUT (*(volatile uint16_t *)(MEM_IO + 0x0130))
 #define REG_KEY_CNT   (*(volatile uint16_t *)(MEM_IO + 0x0132))

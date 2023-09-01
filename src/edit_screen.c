@@ -7,19 +7,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern short edit_screen_BG01_screen_data;
-extern short edit_screen_BG01_screen_data_length;
+extern uint16_t edit_screen_BG01_screen_data;
+extern uint16_t edit_screen_BG01_screen_data_length;
 extern component_callback edit_screen_component_callbacks;
-uint16_t *text;
 uint8_t edit_screen_page = 0;
 enum edit_mode mode;
 
-void edit_screen_init() {
-  text = calloc(edit_screen_BG01_screen_data_length, sizeof(uint8_t));
-}
-
-char * index_to_note_notation(uint8_t index) {
-  static char notation[3];
+void index_to_note_notation(uint8_t index, char *notation) {
   uint8_t note = index % 12;
   if (note == 0 || note == 1) {
     notation[0] = 'C';
@@ -44,15 +38,12 @@ char * index_to_note_notation(uint8_t index) {
     notation[1] = '#';
   }
   notation[2] = '0' + ((index / 12) - 1);
-  return notation;
 }
 
-char * index_to_number_notation(uint8_t index) {
-  static char notation[3];
+void index_to_number_notation(uint8_t index, char *notation) {
   notation[0] = ((index % 1000) / 100) + '0';
   notation[1] = ((index % 100) / 10) + '0';
   notation[2] = (index % 10) + '0';
-  return notation;
 }
 
 char to_hex(uint8_t value) {
@@ -65,66 +56,70 @@ char to_hex(uint8_t value) {
   return ' ';
 }
 
-char * to_long_hex(uint8_t index) {
-  static char notation[3];
+void to_long_hex(uint8_t index, char *notation) {
   notation[0] = to_hex((index % 0x1000) / 0x100);
   notation[1] = to_hex((index % 0x100) / 0x10);
   notation[2] = to_hex(index % 0x10);
-  return notation;
 }
 
 void update_edit_screen_notes() {
+  uint16_t *text = calloc(edit_screen_BG01_screen_data_length / 2, sizeof(uint16_t));
   memcpy(text, &edit_screen_BG01_screen_data, edit_screen_BG01_screen_data_length);
-  uint8_t *indexes;
+  uint8_t *indexes = calloc(NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN, sizeof(uint8_t));
   if (mode == NOTE) {
-    indexes = tracker_selected_pattern_indeces();
+    tracker_selected_pattern_indeces(indexes);
   } else if (mode == HOLD) {
-    indexes = tracker_selected_pattern_lengths();
+    tracker_selected_pattern_lengths(indexes);
   } else if (mode == DECAY) {
-    indexes = tracker_selected_pattern_envelope_steps();
+    tracker_selected_pattern_envelope_steps(indexes);
   } else if (mode == AMPLITUDE) {
-    indexes = tracker_selected_pattern_volumes();
+    tracker_selected_pattern_volumes(indexes);
   } else {
-    indexes = tracker_selected_pattern_indeces();
+    tracker_selected_pattern_indeces(indexes);
   }
-  for (uint8_t y = 0; y < 16; y++) {
-    for (uint8_t x = 0; x < NUMBER_OF_INSTRUMENTS; x++) {
-      uint8_t index = indexes[NUMBER_OF_INSTRUMENTS*(y+16*edit_screen_page)+x];
-      char *notation;
+  for (volatile uint8_t component_y = 0; component_y < 16; component_y++) {
+    for (volatile uint8_t component_x = 0; component_x < NUMBER_OF_INSTRUMENTS; component_x++) {
+      uint8_t index = indexes[NUMBER_OF_INSTRUMENTS*(component_y+16*edit_screen_page)+component_x];
+      char *notation = calloc(3, sizeof(char));
       if (mode == NOTE) {
-        notation = index_to_note_notation(index);
+        index_to_note_notation(index, notation);
       } else if (mode == HOLD && index == 63) {
         notation = "HLD";
       } else {
-        notation = index_to_number_notation(index);
+        index_to_number_notation(index, notation);
       }
-      for (uint8_t i = 0; i < 3; i++) {
-        uint8_t sx = (x*4)+4;
-        uint8_t sy = y+3;
-        text[sy*32+sx+i] = ((notation[i] - 32) & 0x3FF);
+      for (uint8_t j = 0; j < 3; j++) {
+        uint8_t sx = (component_x*4)+4;
+        uint8_t sy = component_y+3;
+        text[sy*32+sx+j] = ((notation[j] - 32) & 0x3FF);
       }
+      free(notation);
     }
-    text[(y+3)*32+1] = to_hex(edit_screen_page);
+    text[(component_y+3)*32+1] = to_hex(edit_screen_page);
   }
   for (uint8_t iter = 0; iter < NUMBER_OF_INSTRUMENTS; iter++) {
     uint8_t selected_pattern = tracker_instrument_selected_pattern(iter);
     text[38+iter*4] = to_hex(selected_pattern);
     text[(6+iter)*32+22] = to_hex(selected_pattern);
     uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(iter);
-    char *notation = to_long_hex(selected_pattern_length);
+    char *notation = calloc(3, sizeof(char));
+    to_long_hex(selected_pattern_length, notation);
     for (uint8_t iter2 = 0; iter2 < 3; iter2++) {
       text[(6+iter)*32+26+iter2] = notation[iter2];
     }
+    free(notation);
   }
   if (paste_mode == NOTES) {
     text[32+28] = ' ' - 32;
   } else {
     text[32+28] = '@' - 32;
   }
+  // memcpy(MEM_BG1_SCREEN_BLOCK, text, edit_screen_BG01_screen_data);
   dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
-  dma_on(1);
   handle_page_flag = 1;
   handle_clipboard_flag = 1;
+  free(indexes);
+  // free(text);
 }
 
 void set_edit_mode(enum edit_mode set_mode) {

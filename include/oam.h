@@ -6,7 +6,7 @@
 struct obj_attrs {
     uint16_t
     y: 8,
-        rotation_scaling: 1,
+        rotation_scaling_enable: 1,
         disable: 1,
         mode: 2,
         mosaic: 1,
@@ -22,6 +22,7 @@ struct obj_attrs {
     tile_number: 10,
         priority: 2,
         palette_number: 4;
+    int16_t rotation_scaling;
 } __attribute__((packed, aligned(4)));
 
 #define MEM_OAM ((struct obj_attrs *) 0x07000000)

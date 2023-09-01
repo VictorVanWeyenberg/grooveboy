@@ -92,7 +92,7 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
   // Each instrument plays one pattern at a time.
   // The number of tracks, also the number of instruments.
   volatile uint8_t *patterns = tracky->tracks[track].patterns;
-  static uint8_t indeces[NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN];
+  uint8_t *indeces = calloc(NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN, sizeof(uint8_t));
   for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[patterns[inst]];
@@ -103,8 +103,7 @@ uint8_t *tracker_track_pattern_indeces(uint8_t track) {
   return indeces;
 }
 
-uint8_t *tracker_selected_pattern_get(enum note_attribute attr) {
-  static uint8_t indeces[NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN];
+void tracker_selected_pattern_get(enum note_attribute attr, uint8_t *indeces) {
   for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[instr.selected_pattern];
@@ -124,28 +123,27 @@ uint8_t *tracker_selected_pattern_get(enum note_attribute attr) {
       indeces[index*NUMBER_OF_INSTRUMENTS + inst] = attribute;
     }
   }
-  return indeces;
 }
 
-uint8_t *tracker_selected_pattern_indeces() {
-  return tracker_selected_pattern_get(INDEX);
+void tracker_selected_pattern_indeces(uint8_t *indeces) {
+  tracker_selected_pattern_get(INDEX, indeces);
 }
 
-uint8_t *tracker_selected_pattern_lengths() {
-  return tracker_selected_pattern_get(LENGTH);
+void tracker_selected_pattern_lengths(uint8_t *indeces) {
+  tracker_selected_pattern_get(LENGTH, indeces);
 }
 
-uint8_t *tracker_selected_pattern_envelope_steps() {
-  return tracker_selected_pattern_get(ENVELOPE_STEP);
+void tracker_selected_pattern_envelope_steps(uint8_t *indeces) {
+  tracker_selected_pattern_get(ENVELOPE_STEP, indeces);
 }
 
-uint8_t *tracker_selected_pattern_volumes() {
-  return tracker_selected_pattern_get(VOLUME);
+void tracker_selected_pattern_volumes(uint8_t *indeces) {
+  tracker_selected_pattern_get(VOLUME, indeces);
 }
 
 uint8_t *tracker_track_pattern_lengths(uint8_t track) {
   volatile uint8_t *patterns = tracky->tracks[track].patterns;
-  uint8_t *lengths = malloc(sizeof(uint8_t) * NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN);
+  uint8_t *lengths = calloc(NUMBER_OF_INSTRUMENTS * NOTES_PER_PATTERN, sizeof(uint8_t));
   for (uint8_t inst = 0; inst < NUMBER_OF_INSTRUMENTS; inst++) {
     struct instrument instr = tracky->instruments[inst];
     struct pattern p = instr.patterns[patterns[inst]];
@@ -210,9 +208,9 @@ void tracker_copy_paste_notes_attribute(uint8_t instrument_src_index,
   }
 }
 
-volatile struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step) {
+struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step) {
   uint8_t selected_pattern = tracker_instrument_selected_pattern(instrument_index);
   uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(instrument_index);
   uint8_t pattern_step = step % selected_pattern_length;
-  return  tracky->instruments[instrument_index].patterns[selected_pattern].notes + 2 * pattern_step;
+  return  (struct note *) tracky->instruments[instrument_index].patterns[selected_pattern].notes + 2 * pattern_step;
 }

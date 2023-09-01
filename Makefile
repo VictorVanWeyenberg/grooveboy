@@ -13,7 +13,7 @@ GBAFIX     := $(DEVKITPRO)/tools/bin/gbafix
 
 MODEL      := -mthumb-interwork -marm # -mlong-calls #This makes interrupts work
 SPECS      := -specs=gba.specs
-CFLAGS     := $(MODEL) -I include -O2 -Wall -pedantic -std=c99
+CFLAGS     := $(MODEL) -I include -Wall -pedantic -std=c99 -O3
 LDFLAGS    := $(SPECS) $(MODEL) -lm
 
 BUILD_DIR  := build
@@ -48,10 +48,10 @@ test: pre-build
 $(TARGET).gba: pre-build $(TARGET).elf
 	$(OBJCOPY) -O binary $(TARGET).elf $@
 	$(GBAFIX) $@
-	rm -f $(TARGET).elf
+	# rm -f $(TARGET).elf
 
 $(TARGET).elf: $(BIN_OFILES) $(SRC_OFILES) $(ASM_OFILES)
-	$(CC) $(OBJ_FILES) $(LDFLAGS) -o $@
+	$(CC) $(OBJ_FILES) $(LDFLAGS) -o $@ -g
 
 $(BIN_OFILES): build/%.o: build/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -61,7 +61,7 @@ build/%.c: bin/%.bin
 	sed -i "s/data/$(notdir $(basename $@))/g" $@
 
 $(SRC_OFILES): build/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -g
 
 $(ASM_OFILES): build/%.o: asm/%.s
 	$(CC) $(CFLAGS) -c $< -o $@
