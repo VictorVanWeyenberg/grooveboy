@@ -17,7 +17,7 @@ void tracker_create() {
         no.index = 36;
         no.length = 32;
         no.envelope_step = 7;
-        no.direction = 1;
+        no.enabled = 0;
         no.volume = 15;
         patt.notes[n_note] = no;
       }
@@ -34,12 +34,16 @@ void tracker_create() {
 }
 
 void tracker_change_note(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
-  uint8_t current = tracky->instruments[instrument].patterns[pattern].notes[note_index].index;
+  volatile struct note *note = &(tracky->instruments[instrument].patterns[pattern].notes[note_index]);
+  uint8_t current = note->index;
   uint8_t offsetted = current + offset;
   if (offsetted < 36 || offsetted > 96) {
     return;
   }
-  tracky->instruments[instrument].patterns[pattern].notes[note_index].index = offsetted;
+  note->index = offsetted;
+  if (note->enabled == 0) {
+    note->enabled = 1;
+  }
 }
 
 void tracker_change_length(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
@@ -69,12 +73,20 @@ void tracker_change_volume(uint8_t instrument, uint8_t pattern, uint8_t note_ind
   tracky->instruments[instrument].patterns[pattern].notes[note_index].volume = offsetted;
 }
 
+void tracker_note_toggle_enable(uint8_t instrument, uint8_t pattern, uint8_t note_index) {
+  tracky->instruments[instrument].patterns[pattern].notes[note_index].enabled =
+    ~(tracky->instruments[instrument].patterns[pattern].notes[note_index].enabled);
+}
+
 void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t offset) {
   uint8_t selected_pattern = tracky->instruments[instrument_index].selected_pattern;
   uint8_t current_length = tracky->instruments[instrument_index].patterns[selected_pattern].length;
-  int8_t offsetted = current_length + offset;
-  if (offsetted < 0 || offsetted > NOTES_PER_PATTERN - 1) {
-    return;
+  int16_t offsetted = current_length + offset;
+  if (offsetted <= 0) {
+    offsetted = 1;
+  }
+  if (offsetted >= NOTES_PER_PATTERN - 1) {
+    offsetted = NOTES_PER_PATTERN - 1;
   }
   tracky->instruments[instrument_index].patterns[selected_pattern].length = offsetted;
 }
@@ -199,5 +211,5 @@ struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step) {
   uint8_t selected_pattern = tracker_instrument_selected_pattern(instrument_index);
   uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(instrument_index);
   uint8_t pattern_step = step % selected_pattern_length;
-  return  (struct note *) tracky->instruments[instrument_index].patterns[selected_pattern].notes + 2 * pattern_step;
+  return  (struct note *) tracky->instruments[instrument_index].patterns[selected_pattern].notes + pattern_step;
 }

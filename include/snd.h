@@ -23,6 +23,18 @@
 
 #define REG_SOUNDBIAS   *(volatile uint16_t*)0x4000088
 
+#define WAVE_RAM0_L     *(volatile uint16_t*)0x4000090
+#define WAVE_RAM0_H     *(volatile uint16_t*)0x4000092
+#define WAVE_RAM1_L     *(volatile uint16_t*)0x4000094
+#define WAVE_RAM1_H     *(volatile uint16_t*)0x4000096
+#define WAVE_RAM2_L     *(volatile uint16_t*)0x4000098
+#define WAVE_RAM2_H     *(volatile uint16_t*)0x400009A
+#define WAVE_RAM3_L     *(volatile uint16_t*)0x400009C
+#define WAVE_RAM3_H     *(volatile uint16_t*)0x400009E
+
+#define TWO_BANKS       (1 << 5);
+
+void snd_init();
 void trigger_sound();
 
 #endif // SND_H_

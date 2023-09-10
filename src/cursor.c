@@ -123,6 +123,9 @@ void cursor_component_method() {
     for (uint8_t iter = 0; iter < kdq_size(component_queue); iter++) {
         uint8_t index = kdq_at(component_queue, iter);
         uint8_t callback_index = components[index].callback_index;
+        if (callback_index > callbacks_length) {
+            continue;
+        }
         uint8_t args_index = components[index].args_index;
         uint8_t args_len = components[index].args_len;
         uint8_t *component_args = &args[0];

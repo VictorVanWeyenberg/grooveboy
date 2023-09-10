@@ -18,7 +18,7 @@ void register_presses() {
 }
 
 uint16_t key_pressed(uint16_t key) {
-    return ((states[key] & 0x81) == 0) && ((states[key] & 0x7E) != 0);
+    return ((states[key] & 0x8001) == 0) && ((states[key] & 0x7FFE) != 0);
 }
 
 uint16_t key_held(uint16_t key) {

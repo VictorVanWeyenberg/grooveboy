@@ -17,9 +17,11 @@ extern short edit_screen_component_data_length;
 extern uint8_t edit_screen_component_args;
 extern int edit_screen_component_args_length;
 extern component_callback *edit_screen_component_callbacks[];
+extern uint8_t edit_screen_component_callbacks_length;
 
 struct component *components;
 component_callback **callbacks;
+uint8_t callbacks_length;
 uint8_t *args;
 uint32_t all_args_len;
 volatile screen_type current_type = EDIT_SCREEN;
@@ -36,6 +38,7 @@ void set_screen_type(screen_type type) {
         // dma_push(1, &edit_screen_BG02_screen_data, edit_screen_BG02_screen_data_length, MEM_BG2_SCREEN_BLOCK);
         components = &edit_screen_component_data;
         callbacks = edit_screen_component_callbacks;
+        callbacks_length = edit_screen_component_callbacks_length;
         args = &edit_screen_component_args;
         all_args_len = edit_screen_component_args_length;
     }

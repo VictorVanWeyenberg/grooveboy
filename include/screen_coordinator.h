@@ -9,6 +9,7 @@ EDIT_SCREEN
 } screen_type;
 
 extern struct component *components;
+extern uint8_t callbacks_length;
 extern component_callback **callbacks;
 extern uint8_t *args;
 extern uint32_t all_args_len;

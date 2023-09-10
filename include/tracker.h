@@ -17,7 +17,7 @@ struct note {
   uint16_t length: 6,
     duty: 2,
     envelope_step: 3,
-    direction: 1,
+    enabled: 1,
     volume: 4;
 } __attribute__((packed));
 
@@ -48,6 +48,7 @@ void tracker_change_note(uint8_t instrument, uint8_t pattern, uint8_t note_index
 void tracker_change_length(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
 void tracker_change_envelope_duty(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
 void tracker_change_volume(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset);
+void tracker_note_toggle_enable(uint8_t instrument, uint8_t pattern, uint8_t note_index);
 
 uint8_t tracker_instrument_selected_pattern(uint8_t instrument);
 uint8_t tracker_instrument_selected_pattern_length(uint8_t instrument);

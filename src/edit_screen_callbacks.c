@@ -6,6 +6,7 @@
 #include "tracker.h"
 #include "screen_coordinator.h"
 
+uint8_t edit_screen_component_callbacks_length = 8;
 component_callback *volatile const edit_screen_component_callbacks[8] = {
     edit_screen_null_function,
     edit_note,
@@ -102,6 +103,10 @@ void change_tracker_attributes(uint8_t instrument, uint8_t pattern, uint8_t note
         }
         update_screen_lock();
     }
+    if (key_pressed(KEY_B)) {
+        tracker_note_toggle_enable(instrument, pattern, note_index);
+        update_screen_lock();
+    }
 }
 
 void edit_note(uint8_t *args, uint8_t args_len) {
@@ -111,6 +116,11 @@ void edit_note(uint8_t *args, uint8_t args_len) {
     uint8_t instrument = args[0];
     uint8_t pattern = tracker_instrument_selected_pattern(instrument);
     uint8_t note_index = args[1] + 16 * edit_screen_page;
+    if (key_pressed(KEY_A) && key_pressed(KEY_B)) {
+        tracker_note_toggle_enable(instrument, pattern, note_index);
+        update_screen_lock();
+        return;
+    }
     if (key_held(KEY_A)) {
         // select_cursor();
         change_tracker_attributes(instrument, pattern, note_index);
@@ -236,17 +246,20 @@ void set_instrument_pattern_length(uint8_t *args, uint8_t args_len) {
     if (key_held(KEY_A)) {
         if (key_pressed(KEY_UP)) {
             tracker_change_selected_pattern_length(instrument_index, 16);
+            update_screen_lock();
         }
         if (key_pressed(KEY_DOWN)) {
             tracker_change_selected_pattern_length(instrument_index, -16);
+            update_screen_lock();
         }
         if (key_pressed(KEY_RIGHT) || key_held(KEY_RIGHT)) {
             tracker_change_selected_pattern_length(instrument_index, 1);
+            update_screen_lock();
         }
         if (key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) {
             tracker_change_selected_pattern_length(instrument_index, -1);
+            update_screen_lock();
         }
-        update_screen_lock();
         return;
     }
     move_cursor();

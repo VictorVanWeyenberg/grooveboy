@@ -36,6 +36,7 @@ int main(void) {
 
   while(REG_VCOUNT >= 160);   // wait till VDraw
   while(REG_VCOUNT < 160);    // wait till VBlank
+  snd_init();
   dma_init();
   pal_init();
   vram_init();
@@ -44,7 +45,7 @@ int main(void) {
   set_screen_type(EDIT_SCREEN);
   cursor_init();
 
-  bpm_to_start(3, 120); // Sound
+  bpm_to_start(3, 240); // Sound
   update_screen_lock();
   update_screen();
 
@@ -53,9 +54,8 @@ int main(void) {
     while(REG_VCOUNT >= 160);   // wait till VDraw
     while(REG_VCOUNT < 160);    // wait till VBlank
 
-    update_screen();
-
     // Draw Screen
+    update_screen();
     dma_cycle();
 
     // Prepare

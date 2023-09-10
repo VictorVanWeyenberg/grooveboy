@@ -13,6 +13,9 @@ extern component_callback edit_screen_component_callbacks;
 uint8_t edit_screen_page = 0;
 enum edit_mode mode;
 
+char *HLD = "HLD";
+char *$$$ = "---";
+
 void index_to_note_notation(uint8_t index, char *notation) {
   uint8_t note = index % 12;
   if (note == 0 || note == 1) {
@@ -82,9 +85,13 @@ void update_edit_screen_notes() {
       uint8_t index = indexes[NUMBER_OF_INSTRUMENTS*(component_y+16*edit_screen_page)+component_x];
       char *notation = calloc(3, sizeof(char));
       if (mode == NOTE) {
-        index_to_note_notation(index, notation);
-      } else if (mode == HOLD && index == 63) {
-        notation = "HLD";
+        if (get_note_of_instrument(component_x, component_y + 16 * edit_screen_page)->enabled == 0) {
+          memcpy(notation, "---", 3);
+        } else {
+          index_to_note_notation(index, notation);
+        }
+      } else if (mode == DECAY && index == 0) {
+        memcpy(notation, "HLD", 3);
       } else {
         index_to_number_notation(index, notation);
       }
