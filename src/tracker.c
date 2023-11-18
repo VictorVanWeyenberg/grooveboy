@@ -15,9 +15,9 @@ void tracker_create() {
       for (uint8_t n_note = 0; n_note < NOTES_PER_PATTERN; n_note++) {
         struct note no;
         no.index = 36;
-        no.length = 32;
-        no.envelope_step = 7;
-        no.enabled = 0;
+        no.length = 8;
+        no.envelope_step = 1;
+        no.enabled = n_note % 4 == 0 && n_instr == 3;
         no.volume = 15;
         patt.notes[n_note] = no;
       }

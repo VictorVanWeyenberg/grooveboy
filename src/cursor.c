@@ -37,7 +37,7 @@ void expand_cursor() {
     handle_cursor_flag = 0;
     int8_t north_index = components[kdq_last(component_queue)].north;
     int8_t south_index = components[kdq_last(component_queue)].south;
-    if (key_pressed(KEY_UP) && north_index != -1 &&
+    if ((key_pressed(KEY_UP) || key_held(KEY_UP)) && north_index != -1 &&
         components[kdq_first(component_queue)].sx == components[north_index].sx &&
         components[kdq_first(component_queue)].callback_index == components[north_index].callback_index) {
         uint8_t component_queue_size = kdq_size(component_queue);
@@ -46,7 +46,7 @@ void expand_cursor() {
         } else {
             kdq_push(uint8_t, component_queue, north_index);
         }
-    } else if (key_pressed(KEY_DOWN) && south_index != -1 &&
+    } else if ((key_pressed(KEY_DOWN) || key_held(KEY_DOWN)) && south_index != -1 &&
                components[kdq_first(component_queue)].sx == components[south_index].sx &&
                components[kdq_first(component_queue)].callback_index == components[south_index].callback_index) {
         uint8_t component_queue_size = kdq_size(component_queue);

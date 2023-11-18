@@ -46,15 +46,10 @@ void trigger_sound() {
     REG_SOUND3CNT_H = (1) | (note2->enabled << 15);
     REG_SOUND3CNT_X = 0x8000 | midi_key_to_sample_rate(note2->index);
 
-    /* REG_SOUND4CNT_L = notes[3]->length |
-        (notes[3]->envelope_step << 8) |
-        SOUND4ENVDEC |
-        (notes[3]->volume << 12);
-    REG_SOUND4CNT_H = 3 |
-        SOUND4STEPS15 |
-        SOUND4PLAYONCE; */
-
-    // REG_SOUND4CNT_H |= 0X8000;
+    const struct note *note3 = get_note_of_instrument(3, step);
+    uint16_t volume3 = note3->enabled ? ((note3->volume) & 0xF) : 0;
+    REG_SOUND4CNT_L = note3->length | (note3->envelope_step << 8) | (volume3 << 12);
+    REG_SOUND4CNT_H = 0x8000 | (0 << 0) | (11 << 4) | (1 << 3);
 
     step++;
     if (step >= 128) step = 0;

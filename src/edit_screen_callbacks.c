@@ -149,6 +149,7 @@ void edit_note(uint8_t *args, uint8_t args_len) {
                 uint8_t pattern = tracker_instrument_selected_pattern(instrument);
                 tracker_copy_paste_notes(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
                                         instrument, pattern, note_index, clipboard_length);
+                update_screen_lock();
             } else if (paste_mode == ATTRIBUTES) {
                 uint8_t pattern = tracker_instrument_selected_pattern(instrument);
                 enum note_attribute attribute = INDEX;
@@ -163,6 +164,7 @@ void edit_note(uint8_t *args, uint8_t args_len) {
                 }
                 tracker_copy_paste_notes_attribute(clipboard_src_instrument, clipboard_src_pattern, clipboard_src_index,
                                         instrument, pattern, note_index, clipboard_length, attribute);
+                update_screen_lock();
             }
         }
         if (key_pressed(KEY_B)) {
