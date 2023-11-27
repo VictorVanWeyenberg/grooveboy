@@ -12,12 +12,26 @@ extern short edit_screen_BG01_screen_data_length;
 extern short edit_screen_BG02_screen_data;
 extern short edit_screen_BG02_screen_data_length;
 
+extern short play_screen_BG00_screen_data;
+extern short play_screen_BG00_screen_data_length;
+extern short play_screen_BG01_screen_data;
+extern short play_screen_BG01_screen_data_length;
+extern short play_screen_BG02_screen_data;
+extern short play_screen_BG02_screen_data_length;
+
 extern struct component edit_screen_component_data;
 extern short edit_screen_component_data_length;
 extern uint8_t edit_screen_component_args;
 extern int edit_screen_component_args_length;
 extern component_callback *edit_screen_component_callbacks[];
 extern uint8_t edit_screen_component_callbacks_length;
+
+extern struct component play_screen_component_data;
+extern short play_screen_component_data_length;
+extern uint8_t play_screen_component_args;
+extern int play_screen_component_args_length;
+extern component_callback *play_screen_component_callbacks[];
+extern uint8_t play_screen_component_callbacks_length;
 
 struct component *components;
 component_callback **callbacks;
@@ -28,20 +42,27 @@ volatile screen_type current_type = EDIT_SCREEN;
 volatile uint8_t update_screen_flag = 0;
 
 void set_screen_type(screen_type type) {
-    if (type == EDIT_SCREEN) {
-        current_type = type;
+    current_type = type;
+    if (type == PLAY_SCREEN) {
+        memcpy(MEM_BG0_SCREEN_BLOCK, &play_screen_BG00_screen_data, play_screen_BG00_screen_data_length);
+        memcpy(MEM_BG1_SCREEN_BLOCK, &play_screen_BG01_screen_data, play_screen_BG01_screen_data_length);
+        memcpy(MEM_BG2_SCREEN_BLOCK, &play_screen_BG02_screen_data, play_screen_BG02_screen_data_length);
+        components = &play_screen_component_data;
+        callbacks = play_screen_component_callbacks;
+        callbacks_length = play_screen_component_callbacks_length;
+        args = &play_screen_component_args;
+        all_args_len = play_screen_component_args_length;
+    } else if (type == EDIT_SCREEN) {
         memcpy(MEM_BG0_SCREEN_BLOCK, &edit_screen_BG00_screen_data, edit_screen_BG00_screen_data_length);
         memcpy(MEM_BG1_SCREEN_BLOCK, &edit_screen_BG01_screen_data, edit_screen_BG01_screen_data_length);
         memcpy(MEM_BG2_SCREEN_BLOCK, &edit_screen_BG02_screen_data, edit_screen_BG02_screen_data_length);
-        // dma_push(1, &edit_screen_BG00_screen_data, edit_screen_BG00_screen_data_length, MEM_BG0_SCREEN_BLOCK);
-        // dma_push(1, &edit_screen_BG01_screen_data, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
-        // dma_push(1, &edit_screen_BG02_screen_data, edit_screen_BG02_screen_data_length, MEM_BG2_SCREEN_BLOCK);
         components = &edit_screen_component_data;
         callbacks = edit_screen_component_callbacks;
         callbacks_length = edit_screen_component_callbacks_length;
         args = &edit_screen_component_args;
         all_args_len = edit_screen_component_args_length;
     }
+    reset_cursor_position();
 }
 
 void update_screen_lock() {

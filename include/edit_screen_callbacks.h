@@ -19,5 +19,6 @@ void hold_edit_mode(uint8_t *args, uint8_t args_len);
 void decay_edit_mode(uint8_t *args, uint8_t args_len);
 void amplitude_edit_mode(uint8_t *args, uint8_t args_len);
 void set_instrument_pattern_length(uint8_t *args, uint8_t args_len);
+void play_screen(uint8_t *args, uint8_t args_len);
 
 #endif // EDIT_SCREEN_CALLBACKS_H_

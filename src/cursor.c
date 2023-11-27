@@ -91,6 +91,15 @@ void move_cursor() {
     refresh_cursor_position();
 }
 
+void reset_cursor_position() {
+    uint8_t ci = 0;
+    while (components[ci].north != -1) ci = components[ci].north;
+    while (components[ci].west != -1) ci = components[ci].west;
+    kdq_push(uint8_t, component_queue, ci);
+    struct component c = components[ci];
+    set_cursor_position(c.sx, c.sy, c.ex, c.ey);
+}
+
 void refresh_cursor_position() {
     while (kdq_size(component_queue) > 1) kdq_pop(uint8_t, component_queue);
     struct component c = components[kdq_first(component_queue)];

@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "screen_coordinator.h"
 #include "snd.h"
+#include "lnk.h"
 
 int main(void) {
   REG_DISPLAY = BG_MODE_0 | SCREEN_DISPLAY_BG0 | SCREEN_DISPLAY_BG1 |
@@ -24,7 +25,7 @@ int main(void) {
 
   REG_IME = 0x00;
   REG_INTERRUPT = &interrupt_handler;
-  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3;
+  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_COM;
   REG_IME = 0x01;
 
   REG_SOUNDCNT_X = 0x0080;
@@ -61,6 +62,9 @@ int main(void) {
     // Prepare
     register_presses();
     cursor_component_method();
+
+    uint32_t data = 0xAAAAAAAA;
+    send(&data, 4);
 
     // Loop end
     loop_end();

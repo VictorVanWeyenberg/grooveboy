@@ -8,7 +8,7 @@ CC         := $(DEVKITARM)$(PREFIX)gcc
 OBJCOPY    := $(DEVKITARM)$(PREFIX)objcopy
 LD         := $(DEVKITARM)$(PREFIX)ls
 AS         := $(DEVKITARM)$(PREFIX)as
-BIN2C      := tools/bin2c
+BIN2C      := bin2c
 GBAFIX     := $(DEVKITPRO)/tools/bin/gbafix
 
 MODEL      := -mthumb -mthumb-interwork -marm # -mlong-calls #This makes interrupts work
@@ -30,17 +30,14 @@ BIN_OFILES := $(BIN_CFILES:.c=.o)
 OBJ_FILES  := $(ASM_OFILES) $(SRC_OFILES) $(BIN_OFILES)
 
 
-all: clean bin
-	docker run --rm -t -v ${PWD}:/grooveboy grooveboy make gba
-
-gba: post-build
+all: post-build
 
 post-build: $(TARGET).gba
 
 pre-build:
 	mkdir -p $(BUILD_DIR)
 
-bin: pre-build $(BIN_CFILES)
+bin:  pre-build $(BIN_CFILES)
 
 test: pre-build
 	cd test && $(MAKE) test

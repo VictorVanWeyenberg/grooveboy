@@ -9,7 +9,6 @@
 
 extern uint16_t edit_screen_BG01_screen_data;
 extern uint16_t edit_screen_BG01_screen_data_length;
-extern component_callback edit_screen_component_callbacks;
 uint8_t edit_screen_page = 0;
 enum edit_mode mode;
 

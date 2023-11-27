@@ -6,8 +6,8 @@
 #include "tracker.h"
 #include "screen_coordinator.h"
 
-uint8_t edit_screen_component_callbacks_length = 8;
-component_callback *volatile const edit_screen_component_callbacks[8] = {
+uint8_t edit_screen_component_callbacks_length = 9;
+component_callback *volatile const edit_screen_component_callbacks[9] = {
     edit_screen_null_function,
     edit_note,
     change_selected_pattern,
@@ -15,7 +15,8 @@ component_callback *volatile const edit_screen_component_callbacks[8] = {
     hold_edit_mode,
     decay_edit_mode,
     amplitude_edit_mode,
-    set_instrument_pattern_length
+    set_instrument_pattern_length,
+    play_screen
 };
 volatile uint8_t handle_page_flag = 1;
 volatile uint8_t handle_clipboard_flag = 1;
@@ -267,3 +268,13 @@ void set_instrument_pattern_length(uint8_t *args, uint8_t args_len) {
     move_cursor();
 }
 
+void play_screen(uint8_t *args, uint8_t args_len) {
+    if (args_len != 0) {
+        return;
+    }
+    if (key_pressed(KEY_A)) {
+        set_screen_type(PLAY_SCREEN);
+        return;
+    }
+    move_cursor();
+}
