@@ -1,0 +1,13 @@
+name: Build GBA artifact
+on: [push]
+jobs:
+  Build-Artifact:
+    name: Build Artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker build -t devkitwb .
+      - name: Run Docker Image
+        run: docker run --mount type=bind,source=./,target=/grooveboy devkitwb

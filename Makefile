@@ -37,12 +37,7 @@ post-build: $(TARGET).gba
 pre-build:
 	mkdir -p $(BUILD_DIR)
 
-bin:  pre-build $(BIN_CFILES)
-
-test: pre-build
-	cd test && $(MAKE) test
-
-$(TARGET).gba: pre-build $(TARGET).elf
+$(TARGET).gba: pre-build $(BIN_CFILES) $(TARGET).elf
 	$(OBJCOPY) -O binary $(TARGET).elf $@
 	$(GBAFIX) $@
 	# rm -f $(TARGET).elf
