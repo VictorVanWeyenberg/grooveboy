@@ -11,3 +11,5 @@ jobs:
         run: docker build -t devkitwb .
       - name: Run Docker Image
         run: docker run --mount type=bind,source=./,target=/grooveboy devkitwb
+      - name: Check Size
+        run: du -h grooveboy.gba
