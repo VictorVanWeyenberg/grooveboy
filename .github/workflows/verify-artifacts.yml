@@ -13,3 +13,8 @@ jobs:
         run: docker run --mount type=bind,source=./,target=/grooveboy devkitwb
       - name: Check Size
         run: du -h grooveboy.gba
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: grooveboy.gba
+          path: ./grooveboy.gba
