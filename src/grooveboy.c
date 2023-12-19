@@ -46,7 +46,7 @@ int main(void) {
   set_screen_type(EDIT_SCREEN);
   cursor_init();
 
-  bpm_to_start(3, 480); // Sound
+  bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm()); // Sound
   update_screen_lock();
   update_screen();
 

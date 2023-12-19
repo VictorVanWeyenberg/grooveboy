@@ -106,13 +106,14 @@ void update_edit_screen_notes() {
   for (uint8_t iter = 0; iter < NUMBER_OF_INSTRUMENTS; iter++) {
     uint8_t selected_pattern = tracker_instrument_selected_pattern(iter);
     text[38+iter*4] = to_hex(selected_pattern);
-    text[(6+iter)*32+22] = to_hex(selected_pattern);
     uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(iter);
     char *notation = calloc(3, sizeof(char));
     to_long_hex(selected_pattern_length, notation);
     for (uint8_t iter2 = 0; iter2 < 3; iter2++) {
       text[(6+iter)*32+26+iter2] = notation[iter2];
     }
+    uint8_t selected_pattern_rhythm = tracker_instrument_selected_pattern_rhythm(iter);
+    text[(6+iter)*32+21] = to_hex(selected_pattern_rhythm + 1);
     free(notation);
   }
   if (paste_mode == NOTES) {
@@ -120,12 +121,9 @@ void update_edit_screen_notes() {
   } else {
     text[32+28] = '@' - 32;
   }
-  // memcpy(MEM_BG1_SCREEN_BLOCK, text, edit_screen_BG01_screen_data);
   dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
-  handle_page_flag = 1;
   handle_clipboard_flag = 1;
   free(indexes);
-  // free(text);
 }
 
 void set_edit_mode(enum edit_mode set_mode) {

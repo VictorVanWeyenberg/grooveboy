@@ -5,9 +5,10 @@
 #include "cursor.h"
 #include "tracker.h"
 #include "screen_coordinator.h"
+#include "timer.h"
 
-uint8_t edit_screen_component_callbacks_length = 9;
-component_callback *volatile const edit_screen_component_callbacks[9] = {
+uint8_t edit_screen_component_callbacks_length = 10;
+component_callback *volatile const edit_screen_component_callbacks[10] = {
     edit_screen_null_function,
     edit_note,
     change_selected_pattern,
@@ -16,9 +17,9 @@ component_callback *volatile const edit_screen_component_callbacks[9] = {
     decay_edit_mode,
     amplitude_edit_mode,
     set_instrument_pattern_length,
+    set_instrument_pattern_rhythm,
     play_screen
 };
-volatile uint8_t handle_page_flag = 1;
 volatile uint8_t handle_clipboard_flag = 1;
 volatile uint8_t clipboard_src_instrument = 0;
 volatile uint8_t clipboard_src_pattern = 0;
@@ -31,15 +32,11 @@ void edit_screen_null_function(uint8_t *args, uint8_t args_len) {
 }
 
 void change_page() {
-    if (handle_page_flag == 0) {
-        return;
-    }
-    handle_page_flag = 0;
     if (key_pressed(KEY_DOWN) && edit_screen_page < (NOTES_PER_PATTERN / 16) - 1) {
         refresh_cursor_position();
         edit_screen_page++;
-            update_screen_lock();
-        } else if (key_pressed(KEY_UP) && edit_screen_page > 0) {
+        update_screen_lock();
+    } else if (key_pressed(KEY_UP) && edit_screen_page > 0) {
         refresh_cursor_position();
         edit_screen_page--;
         update_screen_lock();
@@ -261,6 +258,37 @@ void set_instrument_pattern_length(uint8_t *args, uint8_t args_len) {
         }
         if (key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) {
             tracker_change_selected_pattern_length(instrument_index, -1);
+            update_screen_lock();
+        }
+        return;
+    }
+    move_cursor();
+}
+
+void set_instrument_pattern_rhythm(uint8_t *args, uint8_t args_len) {
+    if (args_len != 1) {
+        return;
+    }
+    uint8_t instrument_index = args[0];
+    if (key_held(KEY_A)) {
+        if (key_pressed(KEY_UP)) {
+            tracker_change_selected_pattern_rhythm(instrument_index, 1);
+            bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm());
+            update_screen_lock();
+        }
+        if (key_pressed(KEY_DOWN)) {
+            tracker_change_selected_pattern_rhythm(instrument_index, -1);
+            bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm());
+            update_screen_lock();
+        }
+        if (key_pressed(KEY_RIGHT) || key_held(KEY_RIGHT)) {
+            tracker_change_selected_pattern_rhythm(instrument_index, 1);
+            bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm());
+            update_screen_lock();
+        }
+        if (key_pressed(KEY_LEFT) || key_held(KEY_LEFT)) {
+            tracker_change_selected_pattern_rhythm(instrument_index, -1);
+            bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm());
             update_screen_lock();
         }
         return;

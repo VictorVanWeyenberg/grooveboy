@@ -16,7 +16,7 @@ struct timer_cnt {
 #define TMxCNT ((struct timer_cnt *) 0x4000100)
 
 void timer_start(uint8_t channel, int16_t start, uint8_t prescaler);
-void bpm_to_start(uint8_t channel, uint16_t bpm);
+void bpm_to_start(uint8_t channel, uint32_t bpm);
 void timer_interrupt(uint8_t channel);
 
 #endif // TIMER_H_

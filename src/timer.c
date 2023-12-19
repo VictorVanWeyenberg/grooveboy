@@ -19,7 +19,7 @@ void timer_start(uint8_t channel, int16_t start, uint8_t prescaler) {
     TMxCNT[channel].enable = 1;
 }
 
-void bpm_to_start(uint8_t channel, uint16_t bpm) {
+void bpm_to_start(uint8_t channel, uint32_t bpm) {
     if (bpm < 16) {
         return;
     }

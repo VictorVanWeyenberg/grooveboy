@@ -12,12 +12,13 @@ void tracker_create() {
     for (uint8_t n_patt = 0; n_patt < PATTERNS_PER_INSTRUMENT; n_patt++) {
       struct pattern patt;
       patt.length = 16;
+      patt.rhythm = 0;
       for (uint8_t n_note = 0; n_note < NOTES_PER_PATTERN; n_note++) {
         struct note no;
         no.index = 36;
         no.length = 8;
         no.envelope_step = 1;
-        no.enabled = n_note % 4 == 0 && n_instr == 3;
+        no.enabled = 0; // n_note % 4 == 0 && n_instr == 3;
         no.volume = 15;
         patt.notes[n_note] = no;
       }
@@ -91,6 +92,38 @@ void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t off
   tracky->instruments[instrument_index].patterns[selected_pattern].length = offsetted;
 }
 
+void tracker_change_selected_pattern_rhythm(uint8_t instrument_index, int8_t offset) {
+  uint8_t selected_pattern = tracky->instruments[instrument_index].selected_pattern;
+  uint8_t current_rhythm = tracky->instruments[instrument_index].patterns[selected_pattern].rhythm;
+  int16_t offsetted = current_rhythm + offset;
+  if (offsetted <= 0) {
+    offsetted = 0;
+  }
+  if (offsetted >= 7) {
+    offsetted = 7;
+  }
+  tracky->instruments[instrument_index].patterns[selected_pattern].rhythm = offsetted;
+}
+
+uint16_t gcd(uint16_t a, uint16_t b) {
+  if (b == 0) {
+        return a;
+  }
+  return gcd(b, a % b);
+}
+
+uint16_t clcm(uint16_t a, uint16_t b) {
+  return (a / gcd(a, b)) * b;
+}
+
+uint16_t tracker_patterns_rhythm_lcm() {
+  uint16_t lcm = clcm(tracker_instrument_selected_pattern_rhythm(0) + 1,
+                      tracker_instrument_selected_pattern_rhythm(1) + 1);
+  lcm = clcm(lcm, tracker_instrument_selected_pattern_rhythm(2) + 1);
+  lcm = clcm(lcm, tracker_instrument_selected_pattern_rhythm(3) + 1);
+  return lcm;
+}
+
 uint8_t tracker_instrument_selected_pattern(uint8_t instrument) {
   return tracky->instruments[instrument].selected_pattern;
 }
@@ -98,6 +131,11 @@ uint8_t tracker_instrument_selected_pattern(uint8_t instrument) {
 uint8_t tracker_instrument_selected_pattern_length(uint8_t instrument) {
   uint8_t selected_pattern = tracker_instrument_selected_pattern(instrument);
   return tracky->instruments[instrument].patterns[selected_pattern].length;
+}
+
+uint8_t tracker_instrument_selected_pattern_rhythm(uint8_t instrument) {
+  uint8_t selected_pattern = tracker_instrument_selected_pattern(instrument);
+  return tracky->instruments[instrument].patterns[selected_pattern].rhythm;
 }
 
 uint8_t *tracker_track_pattern_indeces(uint8_t track) {

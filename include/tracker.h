@@ -23,6 +23,7 @@ struct note {
 
 struct pattern {
   uint8_t length; // Read: Last step
+  uint8_t rhythm: 3;
   struct note notes[NOTES_PER_PATTERN];
 };
 
@@ -52,14 +53,16 @@ void tracker_note_toggle_enable(uint8_t instrument, uint8_t pattern, uint8_t not
 
 uint8_t tracker_instrument_selected_pattern(uint8_t instrument);
 uint8_t tracker_instrument_selected_pattern_length(uint8_t instrument);
+uint8_t tracker_instrument_selected_pattern_rhythm(uint8_t instrument);
+uint16_t tracker_patterns_rhythm_lcm();
 
-uint8_t  tracker_selected_pattern(uint8_t instrument);
+uint8_t tracker_selected_pattern(uint8_t instrument);
 void tracker_selected_pattern_indeces(uint8_t *indeces);
 void tracker_selected_pattern_lengths(uint8_t *indeces);
 void tracker_selected_pattern_envelope_steps(uint8_t *indeces);
 void tracker_selected_pattern_volumes(uint8_t *indeces);
 void tracker_change_selected_pattern_length(uint8_t instrument_index, int8_t offset);
-
+void tracker_change_selected_pattern_rhythm(uint8_t instrument_index, int8_t offset);
 void tracker_change_selected_pattern(uint8_t instrument_number, int8_t offset);
 
 void tracker_copy_paste_notes(uint8_t instrument_src_index,
