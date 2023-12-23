@@ -1,20 +1,23 @@
 # TO DO Grooveboy
 
-- User experience
-  - Turn notes off on new tracker.
-  - Turn notes on on change.
+- ~~User experience~~
+  - ~~Turn notes off on new tracker.~~
+  - ~~Turn notes on on change.~~
 - Finish channel 3 and 4 sound.
-  - Channel 3: set to generic wave. Experiment with forms.
+  - ~~Channel 3: set to generic wave. Experiment with forms.~~
   - Channel 4:
     - Edit screen UI change for drums.
     - Tracker data structure changes for drums. How will three percussives play on one sound channel?
 - Clean up. Remove kinks for first POC release.
-  - Polyrhythms
-    1. Step keeps counting up to #notes * LCM.
-    2. Every time step modulo rhythm equals zero for a certain pattern,
-       trigger the step divided by rhythm step of that pattern.
-  - Play/Pauze/Stop
+  - ~~Polyrhythms~~
+    1. ~~Step keeps counting up to #notes * LCM.~~
+    2. ~~Every time step modulo rhythm equals zero for a certain pattern,~~
+       ~~trigger the step divided by rhythm step of that pattern.~~
+  - ~~Play/Pauze/Stop~~
   - Cursor path between Amplitude and Wave Settings.
+  - ~~Cursor moves too fast.~~
+  - HOLD?
+  - Channel 3 attributes.
 - Documentation / Manual
 - Github workflows.
   - Action to build grooveboy.

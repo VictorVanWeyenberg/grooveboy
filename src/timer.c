@@ -36,5 +36,7 @@ void bpm_to_start(uint8_t channel, uint32_t bpm) {
 void timer_interrupt(uint8_t channel) {
     if (channel == 3) {
         trigger_sound();
+    } else if (channel == 2) {
+        cursor_component_method();
     }
 }

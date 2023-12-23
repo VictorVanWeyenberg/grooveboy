@@ -25,7 +25,7 @@ int main(void) {
 
   REG_IME = 0x00;
   REG_INTERRUPT = &interrupt_handler;
-  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_COM;
+  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_TIMER2 | INT_COM;
   REG_IME = 0x01;
 
   REG_SOUNDCNT_X = 0x0080;
@@ -47,6 +47,7 @@ int main(void) {
   cursor_init();
 
   bpm_to_start(3, 120 * tracker_patterns_rhythm_lcm()); // Sound
+  bpm_to_start(2, 800); // Cursor component methods
   update_screen_lock();
   update_screen();
 
@@ -61,13 +62,12 @@ int main(void) {
 
     // Prepare
     register_presses();
-    cursor_component_method();
 
     uint32_t data = 0xAAAAAAAA;
     send(&data, 4);
 
     // Loop end
-    loop_end();
+    // loop_end();
   }
 
   return 0;

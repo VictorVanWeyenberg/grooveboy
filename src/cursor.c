@@ -144,4 +144,5 @@ void cursor_component_method() {
         callbacks[callback_index](component_args, args_len);
     }
     handle_cursor_flag = 1;
+    loop_end();
 }
