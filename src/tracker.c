@@ -32,6 +32,8 @@ void tracker_create() {
       tracky->tracks[n_track].patterns[n_patt] = 0;
     }
   }
+
+  tracky->play_pause = 0;
 }
 
 void tracker_change_note(uint8_t instrument, uint8_t pattern, uint8_t note_index, int8_t offset) {
@@ -250,4 +252,16 @@ struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step) {
   uint8_t selected_pattern_length = tracker_instrument_selected_pattern_length(instrument_index);
   uint8_t pattern_step = step % selected_pattern_length;
   return  (struct note *) tracky->instruments[instrument_index].patterns[selected_pattern].notes + pattern_step;
+}
+
+void tracker_toggle_play_pause() {
+  tracky->play_pause = ~tracky->play_pause;
+}
+
+void tracker_stop() {
+  tracky->play_pause = 0;
+}
+
+uint8_t tracker_play_pause() {
+  return tracky->play_pause;
 }

@@ -36,5 +36,6 @@
 
 void snd_init();
 void trigger_sound();
+void set_step(uint32_t set_step);
 
 #endif // SND_H_

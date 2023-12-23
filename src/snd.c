@@ -27,7 +27,15 @@ uint32_t midi_key_to_sample_rate(uint8_t key) {
     return round(2048 - 131072 / freq);
 }
 
+void set_step(uint32_t step_p) {
+    step = step_p;
+}
+
 void trigger_sound() {
+    if (tracker_play_pause() == 0) {
+        return;
+    }
+
     uint16_t interstep; // The step in the track that needs to be triggered.
     uint16_t rhythm;
     uint16_t lcm = tracker_patterns_rhythm_lcm();

@@ -37,6 +37,7 @@ struct track {
 } __attribute__((packed));
 
 struct tracker {
+  uint8_t play_pause: 1;
   struct instrument instruments[NUMBER_OF_INSTRUMENTS];
   struct track tracks[NUMBER_OF_TRACKS];
 } __attribute__((packed));
@@ -82,5 +83,8 @@ void tracker_copy_paste_notes_attribute(uint8_t instrument_src_index,
                               enum note_attribute attribute);
 
 struct note *get_note_of_instrument(uint8_t instrument_index, uint8_t step);
+void tracker_toggle_play_pause();
+void tracker_stop();
+uint8_t tracker_play_pause();
 
 #endif

@@ -6,9 +6,10 @@
 #include "tracker.h"
 #include "screen_coordinator.h"
 #include "timer.h"
+#include "snd.h"
 
-uint8_t edit_screen_component_callbacks_length = 10;
-component_callback *volatile const edit_screen_component_callbacks[10] = {
+uint8_t edit_screen_component_callbacks_length = 11;
+component_callback *volatile const edit_screen_component_callbacks[11] = {
     edit_screen_null_function,
     edit_note,
     change_selected_pattern,
@@ -18,7 +19,8 @@ component_callback *volatile const edit_screen_component_callbacks[10] = {
     amplitude_edit_mode,
     set_instrument_pattern_length,
     set_instrument_pattern_rhythm,
-    play_screen
+    play_screen,
+    play_pause
 };
 volatile uint8_t handle_clipboard_flag = 1;
 volatile uint8_t clipboard_src_instrument = 0;
@@ -302,6 +304,21 @@ void play_screen(uint8_t *args, uint8_t args_len) {
     }
     if (key_pressed(KEY_A)) {
         set_screen_type(PLAY_SCREEN);
+        return;
+    }
+    move_cursor();
+}
+
+void play_pause(uint8_t *args, uint8_t args_len) {
+    if (args_len != 0) {
+        return;
+    }
+    if (key_pressed(KEY_A)) {
+        tracker_toggle_play_pause();
+        return;
+    } else if (key_pressed(KEY_B)) {
+        tracker_stop();
+        set_step(0);
         return;
     }
     move_cursor();
