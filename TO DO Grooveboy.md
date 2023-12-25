@@ -14,11 +14,10 @@
     2. ~~Every time step modulo rhythm equals zero for a certain pattern,~~
        ~~trigger the step divided by rhythm step of that pattern.~~
   - ~~Play/Pauze/Stop~~
-  - Cursor path between Amplitude and Wave Settings.
+  - ~~Cursor path between Amplitude and Wave Settings.~~
   - ~~Cursor moves too fast.~~
-  - HOLD?
   - Channel 3 attributes don't seem to do anything. Do the other attributes work fine?
-  - When changing length while notes are enabled, the notes length seems to impact the pattern notes.
+  - ~~When changing length while notes are enabled, the notes length seems to impact the pattern notes.~~
 - Documentation / Manual
 - ~~Github workflows.~~
   - ~~Action to build grooveboy.~~
