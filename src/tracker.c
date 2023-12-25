@@ -177,6 +177,11 @@ void tracker_selected_pattern_get(enum note_attribute attr, uint8_t *indeces) {
   }
 }
 
+uint8_t tracker_selected_pattern_note_enabled(uint8_t instrument_number, uint8_t note_index) {
+  uint8_t selected_pattern = tracky->instruments[instrument_number].selected_pattern;
+  return tracky->instruments[instrument_number].patterns[selected_pattern].notes[note_index].enabled;
+}
+
 void tracker_selected_pattern_indeces(uint8_t *indeces) {
   tracker_selected_pattern_get(INDEX, indeces);
 }

@@ -84,7 +84,7 @@ void update_edit_screen_notes() {
       uint8_t index = indexes[NUMBER_OF_INSTRUMENTS*(component_y+16*edit_screen_page)+component_x];
       char *notation = calloc(3, sizeof(char));
       if (mode == NOTE) {
-        if (get_note_of_instrument(component_x, component_y + 16 * edit_screen_page)->enabled == 0) {
+        if (tracker_selected_pattern_note_enabled(component_x, component_y + 16 * edit_screen_page) == 0) {
           memcpy(notation, "---", 3);
         } else {
           index_to_note_notation(index, notation);

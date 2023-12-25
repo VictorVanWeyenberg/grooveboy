@@ -17,13 +17,14 @@
   - Cursor path between Amplitude and Wave Settings.
   - ~~Cursor moves too fast.~~
   - HOLD?
-  - Channel 3 attributes.
+  - Channel 3 attributes don't seem to do anything. Do the other attributes work fine?
+  - When changing length while notes are enabled, the notes length seems to impact the pattern notes.
 - Documentation / Manual
-- Github workflows.
-  - Action to build grooveboy.
-  - Only branches that succeed on that action may be merged into master.
-  - Nothing may directly be pushed to master.
-  - Merges to master must be done through a PR.
+- ~~Github workflows.~~
+  - ~~Action to build grooveboy.~~
+  - ~~Only branches that succeed on that action may be merged into master.~~
+  - ~~Nothing may directly be pushed to master.~~
+  - ~~Merges to master must be done through a PR.~~
 - **<u>RELEASE</u>**
 - Play Screen.
   - Edit tracks
@@ -35,6 +36,7 @@
   - Spike compression.
   - Keyboard.
 - libsavgba
+- Split libgba and grooveboy codebase
 - **<u>RELEASE</u>**
 - Wave Settings?
 - Noise Settings?
