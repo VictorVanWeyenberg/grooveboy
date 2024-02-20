@@ -15,6 +15,11 @@
 #include "snd.h"
 #include "lnk.h"
 
+extern char Kick_Drumulator_DOWN;
+extern int Kick_Drumulator_DOWN_length;
+extern char Tom_SD_80s_Drumulator;
+extern int Tom_SD_80s_Drumulator_length;
+
 int main(void) {
   REG_DISPLAY = BG_MODE_0 | SCREEN_DISPLAY_BG0 | SCREEN_DISPLAY_BG1 |
                 SCREEN_DISPLAY_BG2 | SCREEN_DISPLAY_OBJ |
@@ -25,13 +30,12 @@ int main(void) {
 
   REG_IME = 0x00;
   REG_INTERRUPT = &interrupt_handler;
-  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_TIMER2 | INT_COM;
+  REG_IE  = INT_DMA0 | INT_DMA1 | INT_TIMER3 | INT_TIMER2 | INT_TIMER1 | INT_COM;
   REG_IME = 0x01;
 
-  REG_SOUNDCNT_X = 0x0080;
   REG_SOUNDCNT_L = 0xFF77;
-  REG_SOUNDCNT_H = 0x0002;
-  REG_SOUNDBIAS  = 0xC200;
+  REG_SOUNDCNT_H = 0x0B0E;
+  REG_SOUNDCNT_X = 0x0080;
 
   tracker_create();
 
@@ -50,6 +54,10 @@ int main(void) {
   bpm_to_start(2, 800); // Cursor component methods
   update_screen_lock();
   update_screen();
+
+  dma_push(1, &Tom_SD_80s_Drumulator, Tom_SD_80s_Drumulator_length, FIFO_A);
+  // timer_start(1, 52599);
+  timer_start(0, 380);
 
   while (1) {
     // Wait for VSYNC

@@ -25,8 +25,10 @@ struct dma_entry {
 #define DMA_SRC_INC (0 << 23)
 #define DMA_SRC_DEC (1 << 23)
 #define DMA_SRC_FIX (2 << 23)
-
-#define TRANSFER_16 (1 << 28)
+#define DMA_REPEAT  (1 << 25)
+#define TRANSFER_16 (0 << 26)
+#define TRANSFER_32 (1 << 26)
+#define SPECIAL_START (3 << 28)
 #define DMA_INT (1 << 30)
 #define DMA_ON (1 << 31)
 

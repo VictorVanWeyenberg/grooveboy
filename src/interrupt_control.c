@@ -23,6 +23,14 @@ void interrupt_handler(void) {
     REG_IF |= INT_TIMER2;
     timer_interrupt(2);
   }
+  if (REG_IF & INT_TIMER1) {
+    REG_IF |= INT_TIMER1;
+    timer_interrupt(1);
+  }
+  if (REG_IF & INT_TIMER0) {
+    REG_IF |= INT_TIMER0;
+    timer_interrupt(0);
+  }
   if (REG_IF & INT_COM) {
     REG_IF |= INT_COM;
     lnk_interrupt();

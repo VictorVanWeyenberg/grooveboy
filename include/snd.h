@@ -32,10 +32,13 @@
 #define WAVE_RAM3_L     *(volatile uint16_t*)0x400009C
 #define WAVE_RAM3_H     *(volatile uint16_t*)0x400009E
 
+#define FIFO_A          ((uint32_t*)(0x40000A0))
+
 #define TWO_BANKS       (1 << 5);
 
 void snd_init();
 void trigger_sound();
 void set_step(uint32_t set_step);
+void increase_sample();
 
 #endif // SND_H_

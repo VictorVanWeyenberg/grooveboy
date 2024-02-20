@@ -7,7 +7,7 @@
 const uint32_t CLK_FREQ = 16777216;
 const double scalers[4] = { 1.0, 64.0, 256.0, 1024.0 };
 
-void timer_start(uint8_t channel, int16_t start, uint8_t prescaler) {
+void timer_start_prescaler(uint8_t channel, int16_t start, uint8_t prescaler) {
     if (channel < 0 || channel > 3) {
         return;
     }
@@ -19,6 +19,10 @@ void timer_start(uint8_t channel, int16_t start, uint8_t prescaler) {
     TMxCNT[channel].enable = 1;
 }
 
+void timer_start(uint8_t channel, int16_t start) {
+    timer_start_prescaler(channel, start, 0);
+}
+
 void bpm_to_start(uint8_t channel, uint32_t bpm) {
     if (bpm < 16) {
         return;
@@ -27,7 +31,7 @@ void bpm_to_start(uint8_t channel, uint32_t bpm) {
         double scaler = scalers[index];
         double start = (CLK_FREQ / scaler) * (60.0 / bpm);
         if (start < 32768) {
-            timer_start(channel, start, index);
+            timer_start_prescaler(channel, start, index);
             return;
         }
     }
@@ -38,5 +42,7 @@ void timer_interrupt(uint8_t channel) {
         trigger_sound();
     } else if (channel == 2) {
         cursor_component_method();
+    } else if (channel == 0) {
+        
     }
 }

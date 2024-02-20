@@ -121,7 +121,7 @@ void update_edit_screen_notes() {
   } else {
     text[32+28] = '@' - 32;
   }
-  dma_push(1, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
+  dma_push(0, text, edit_screen_BG01_screen_data_length, MEM_BG1_SCREEN_BLOCK);
   handle_clipboard_flag = 1;
   free(indexes);
 }

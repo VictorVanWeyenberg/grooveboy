@@ -53,7 +53,11 @@ void dma_cycle() {
     DMA[channel].cnt = 0;
     DMA[channel].src = entry->src;
     DMA[channel].dst = entry->dst;
-    DMA[channel].cnt = 0 | entry->cnt | DMA_SRC_INC | DMA_DST_INC | DMA_INT | TRANSFER_16 | DMA_ON;
+    if (channel == 1 || channel == 2) {
+      DMA[channel].cnt = 0 | DMA_ON | TRANSFER_32 | SPECIAL_START | DMA_REPEAT;
+    } else {
+      DMA[channel].cnt = 0 | entry->cnt | DMA_SRC_INC | DMA_DST_INC | DMA_INT | TRANSFER_16 | DMA_ON;
+    }
     busy_entries[channel] = entry;
   }
 }

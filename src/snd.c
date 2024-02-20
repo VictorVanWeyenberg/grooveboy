@@ -3,6 +3,7 @@
 #include <math.h>
 
 uint32_t step = 0;
+uint32_t sample = 0;
 
 void snd_init() {
     WAVE_RAM0_L = 0x1032;
@@ -29,6 +30,10 @@ uint32_t midi_key_to_sample_rate(uint8_t key) {
 
 void set_step(uint32_t step_p) {
     step = step_p;
+}
+
+void increase_sample() {
+    sample++;
 }
 
 void trigger_sound() {
